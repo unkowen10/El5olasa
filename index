@@ -1,0 +1,2496 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f0f23">
+    <meta name="description" content="اختبارات تفاعلية شاملة في أساسيات البرمجة وهندسة البرمجيات 2026">
+    <title>🚀 اختبارات البرمجة الشاملة 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ═══════════ 1) المتغيرات ونظام الألوان ═══════════ */
+        :root {
+            --bg1: #0f0f23;
+            --bg2: #1a1a3e;
+            --p1: #6366f1;
+            --p2: #8b5cf6;
+            --s1: #06b6d4;
+            --s2: #22d3ee;
+            --ok: #10b981;
+            --err: #ef4444;
+            --warn: #f59e0b;
+            --t1: #f1f5f9;
+            --t2: #94a3b8;
+            --glass: rgba(255, 255, 255, .045);
+            --glass2: rgba(255, 255, 255, .09);
+            --r-sm: 12px;
+            --r-md: 16px;
+            --r-lg: 24px;
+            --tr: .35s cubic-bezier(.4, 0, .2, 1);
+            --tr-spring: .5s cubic-bezier(.22, 1, .36, 1);
+            --grad-p: linear-gradient(135deg, var(--p1), var(--p2));
+            --grad-s: linear-gradient(135deg, var(--s1), var(--s2));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Cairo', 'Space Grotesk', sans-serif;
+            color: var(--t1);
+            line-height: 1.75;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg1) 100%) fixed;
+        }
+
+        .en {
+            font-family: 'Space Grotesk', 'Cairo', sans-serif;
+            direction: ltr;
+            unicode-bidi: isolate
+        }
+
+        ::selection {
+            background: rgba(99, 102, 241, .45);
+            color: #fff
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--s2);
+            outline-offset: 3px;
+            border-radius: 8px
+        }
+
+        button {
+            font-family: inherit
+        }
+
+        /* ═══════════ 2) الخلفية المتحركة (جسيمات + كرات ضبابية) ═══════════ */
+        #bgParticles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: .45;
+            z-index: 0;
+            pointer-events: none;
+            animation: orbFloat 26s ease-in-out infinite alternate;
+            will-change: transform
+        }
+
+        .orb1 {
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(99, 102, 241, .55), transparent 70%);
+            top: -120px;
+            right: -120px
+        }
+
+        .orb2 {
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(34, 211, 238, .4), transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -8s
+        }
+
+        .orb3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, .45), transparent 70%);
+            top: 45%;
+            left: 55%;
+            animation-delay: -15s
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1)
+            }
+
+            50% {
+                transform: translate(-40px, 30px) scale(1.08)
+            }
+
+            100% {
+                transform: translate(30px, -40px) scale(.95)
+            }
+        }
+
+        #fxCanvas {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            pointer-events: none
+        }
+
+        /* ═══════════ 3) الشاشات والانتقالات (SPA) ═══════════ */
+        .screen {
+            display: none;
+            position: relative;
+            z-index: 2;
+            min-height: 100vh
+        }
+
+        .screen.active {
+            display: block;
+            animation: screenIn .55s cubic-bezier(.22, 1, .36, 1)
+        }
+
+        @keyframes screenIn {
+            from {
+                opacity: 0;
+                transform: translateY(26px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        /* ═══════════ 4) الزجاج والحدود المتدرجة (Glassmorphism) ═══════════ */
+        .glass {
+            position: relative;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--r-lg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .25)
+        }
+
+        .glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, .55), rgba(34, 211, 238, .22) 50%, rgba(139, 92, 246, .45));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none
+        }
+
+        /* ═══════════ 5) شاشة البداية ═══════════ */
+        .hero {
+            text-align: center;
+            padding: 64px 16px 28px
+        }
+
+        .rocket {
+            font-size: clamp(3rem, 7vw, 5rem);
+            display: inline-block;
+            animation: rocketFloat 3.5s ease-in-out infinite;
+            filter: drop-shadow(0 8px 24px rgba(99, 102, 241, .5))
+        }
+
+        @keyframes rocketFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-6deg)
+            }
+
+            50% {
+                transform: translateY(-14px) rotate(6deg)
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(1.7rem, 5vw, 3.4rem);
+            font-weight: 900;
+            letter-spacing: -.5px;
+            margin: 10px 0 12px;
+            background: linear-gradient(135deg, #f1f5f9, #a5b4fc 45%, #67e8f9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .hero p {
+            color: var(--t2);
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-weight: 300;
+            max-width: 640px;
+            margin: 0 auto
+        }
+
+        .gstats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 28px 0 8px
+        }
+
+        .gstat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 99px;
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, .1);
+            font-weight: 700;
+            font-size: .95rem;
+            backdrop-filter: blur(12px)
+        }
+
+        .gstat b {
+            color: #a5b4fc;
+            font-family: 'Space Grotesk'
+        }
+
+        .resume {
+            max-width: 760px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 24px;
+            border: 1px solid rgba(245, 158, 11, .4) !important;
+            flex-wrap: wrap
+        }
+
+        .resume .hidden {
+            display: none
+        }
+
+        .resume-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700
+        }
+
+        .resume-info small {
+            display: block;
+            color: var(--t2);
+            font-weight: 400
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 24px;
+            padding: 16px 0 40px
+        }
+
+        .quiz-card {
+            padding: 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            transition: transform .45s var(--tr-spring), box-shadow .45s;
+            animation: cardUp .6s var(--tr-spring) both
+        }
+
+        .quiz-card:nth-child(2) {
+            animation-delay: .06s
+        }
+
+        .quiz-card:nth-child(3) {
+            animation-delay: .12s
+        }
+
+        .quiz-card:nth-child(4) {
+            animation-delay: .18s
+        }
+
+        .quiz-card:nth-child(5) {
+            animation-delay: .24s
+        }
+
+        .quiz-card:nth-child(6) {
+            animation-delay: .3s
+        }
+
+        @keyframes cardUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .quiz-card:hover {
+            transform: perspective(900px) rotateX(3deg) rotateY(-3deg) translateY(-10px);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .5), 0 0 44px color-mix(in srgb, var(--ac) 32%, transparent)
+        }
+
+        .qc-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start
+        }
+
+        .qc-icon {
+            font-size: 3rem;
+            line-height: 1;
+            display: inline-block;
+            animation: iconFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 18px var(--ac));
+            transition: transform .4s
+        }
+
+        .quiz-card:hover .qc-icon {
+            transform: scale(1.18) rotate(-8deg)
+        }
+
+        @keyframes iconFloat {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-8px)
+            }
+        }
+
+        .qc-level {
+            font-size: .8rem;
+            font-weight: 800;
+            padding: 5px 14px;
+            border-radius: 99px
+        }
+
+        .lv-b {
+            background: rgba(16, 185, 129, .15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, .4)
+        }
+
+        .lv-m {
+            background: rgba(245, 158, 11, .15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, .4)
+        }
+
+        .lv-a {
+            background: rgba(244, 63, 94, .15);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, .4)
+        }
+
+        .qc-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            line-height: 1.5
+        }
+
+        .qc-meta {
+            color: var(--t2);
+            font-size: .9rem;
+            font-weight: 600
+        }
+
+        .qc-best {
+            font-size: .85rem;
+            font-weight: 700;
+            color: #34d399;
+            background: rgba(16, 185, 129, .1);
+            border: 1px dashed rgba(16, 185, 129, .4);
+            border-radius: var(--r-sm);
+            padding: 8px 14px
+        }
+
+        .qc-best.none {
+            color: var(--t2);
+            border-color: rgba(148, 163, 184, .3)
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 26px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 1rem;
+            transition: var(--tr);
+            text-decoration: none;
+            user-select: none
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(.97)
+        }
+
+        .btn-primary {
+            background: var(--grad-p);
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, .4), inset 0 1px 0 rgba(255, 255, 255, .25)
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 34px rgba(99, 102, 241, .55), 0 0 30px rgba(139, 92, 246, .45)
+        }
+
+        .btn-cyan {
+            background: var(--grad-s);
+            color: #062a33;
+            box-shadow: 0 8px 24px rgba(6, 182, 212, .35)
+        }
+
+        .btn-cyan:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 34px rgba(6, 182, 212, .5)
+        }
+
+        .btn-ghost {
+            background: var(--glass);
+            color: var(--t1);
+            border: 1px solid rgba(255, 255, 255, .18);
+            backdrop-filter: blur(10px)
+        }
+
+        .btn-ghost:hover {
+            background: var(--glass2);
+            transform: translateY(-3px)
+        }
+
+        .btn-glow {
+            animation: glowPulse 2.4s ease-in-out infinite
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 24px rgba(99, 102, 241, .35)
+            }
+
+            50% {
+                box-shadow: 0 8px 36px rgba(139, 92, 246, .6), 0 0 24px rgba(99, 102, 241, .5)
+            }
+        }
+
+        .btn-start {
+            margin-top: auto;
+            background: linear-gradient(135deg, var(--ac), color-mix(in srgb, var(--ac) 55%, #8b5cf6));
+            color: #fff
+        }
+
+        footer {
+            text-align: center;
+            color: var(--t2);
+            font-size: .85rem;
+            padding: 24px;
+            font-weight: 300
+        }
+
+        /* ═══════════ 6) شاشة الاختبار ═══════════ */
+        .quiz-topbar {
+            position: sticky;
+            top: 12px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 18px;
+            margin-bottom: 22px;
+            flex-wrap: wrap
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .15);
+            background: var(--glass);
+            color: var(--t1);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--tr);
+            display: grid;
+            place-items: center
+        }
+
+        .icon-btn:hover {
+            background: var(--glass2);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .35)
+        }
+
+        .fixed-mute {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 70;
+            backdrop-filter: blur(10px)
+        }
+
+        .qt-info {
+            min-width: 140px
+        }
+
+        .qt-name {
+            font-weight: 800;
+            font-size: .95rem
+        }
+
+        .qt-counter {
+            color: var(--t2);
+            font-size: .8rem;
+            font-weight: 600
+        }
+
+        .pbar-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px
+        }
+
+        .pbar {
+            flex: 1;
+            height: 12px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, .08);
+            overflow: hidden;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, .35)
+        }
+
+        .pfill {
+            height: 100%;
+            width: 0%;
+            border-radius: 99px;
+            background: var(--grad-s);
+            position: relative;
+            transition: width .6s var(--tr-spring);
+            box-shadow: 0 0 14px rgba(34, 211, 238, .6)
+        }
+
+        .pfill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .45), transparent);
+            animation: shimmer 1.4s linear infinite
+        }
+
+        @keyframes shimmer {
+            from {
+                transform: translateX(-100%)
+            }
+
+            to {
+                transform: translateX(100%)
+            }
+        }
+
+        .p-pct {
+            font-family: 'Space Grotesk';
+            font-weight: 700;
+            font-size: .85rem;
+            color: #67e8f9;
+            min-width: 44px
+        }
+
+        .timer {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            min-width: 56px
+        }
+
+        .timer svg {
+            width: 56px;
+            height: 56px;
+            transform: rotate(-90deg)
+        }
+
+        .tbg {
+            fill: none;
+            stroke: rgba(255, 255, 255, .1);
+            stroke-width: 4
+        }
+
+        .tfg {
+            fill: none;
+            stroke: var(--s2);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 125.66;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear, stroke .3s;
+            filter: drop-shadow(0 0 5px rgba(34, 211, 238, .6))
+        }
+
+        .timer .tnum {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            font-family: 'Space Grotesk';
+            font-weight: 700;
+            font-size: 15px;
+            transition: color .3s
+        }
+
+        .timer.danger .tfg {
+            stroke: var(--err);
+            filter: drop-shadow(0 0 6px rgba(239, 68, 68, .8))
+        }
+
+        .timer.danger .tnum {
+            color: var(--err);
+            animation: pulse 1s infinite
+        }
+
+        @keyframes pulse {
+            50% {
+                transform: scale(1.2)
+            }
+        }
+
+        .quiz-area {
+            padding-bottom: 60px
+        }
+
+        .qcard {
+            padding: 32px;
+            animation: qIn .5s var(--tr-spring)
+        }
+
+        .qcard.re-anim {
+            animation: qIn .5s var(--tr-spring)
+        }
+
+        @keyframes qIn {
+            from {
+                opacity: 0;
+                transform: translateX(-40px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .qcard.shake {
+            animation: qShake .5s
+        }
+
+        @keyframes qShake {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            20% {
+                transform: translateX(-10px)
+            }
+
+            40% {
+                transform: translateX(10px)
+            }
+
+            60% {
+                transform: translateX(-6px)
+            }
+
+            80% {
+                transform: translateX(6px)
+            }
+        }
+
+        .q-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            gap: 12px
+        }
+
+        .q-num {
+            font-family: 'Space Grotesk';
+            font-size: 2.6rem;
+            font-weight: 700;
+            background: var(--grad-p);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 18px rgba(99, 102, 241, .5))
+        }
+
+        .q-hint {
+            color: var(--t2);
+            font-size: .78rem;
+            font-weight: 600;
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, .1);
+            padding: 6px 14px;
+            border-radius: 99px
+        }
+
+        .q-text {
+            font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+            font-weight: 600;
+            text-align: left;
+            line-height: 1.6;
+            margin-bottom: 26px;
+            color: var(--t1)
+        }
+
+        .options {
+            display: grid;
+            gap: 14px;
+            direction: ltr
+        }
+
+        .options.locked .option {
+            pointer-events: none
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 18px;
+            border-radius: var(--r-md);
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, .09);
+            cursor: pointer;
+            transition: var(--tr);
+            text-align: left;
+            width: 100%;
+            color: var(--t1);
+            font-size: 1.02rem;
+            position: relative
+        }
+
+        .option:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: rgba(99, 102, 241, .6);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, .25);
+            background: var(--glass2)
+        }
+
+        .option .letter {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            font-family: 'Space Grotesk';
+            background: rgba(99, 102, 241, .18);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, .35);
+            transition: var(--tr)
+        }
+
+        .option .otext {
+            flex: 1
+        }
+
+        .option .mark {
+            font-size: 1.25rem;
+            font-weight: 900;
+            min-width: 26px;
+            text-align: center
+        }
+
+        .option.correct {
+            background: rgba(16, 185, 129, .14);
+            border-color: var(--ok);
+            box-shadow: 0 0 26px rgba(16, 185, 129, .35);
+            animation: pop .45s
+        }
+
+        .option.correct .letter {
+            background: var(--ok);
+            color: #fff;
+            border-color: var(--ok)
+        }
+
+        .option.correct .mark {
+            color: #34d399
+        }
+
+        .option.wrong {
+            background: rgba(239, 68, 68, .13);
+            border-color: var(--err);
+            box-shadow: 0 0 22px rgba(239, 68, 68, .3);
+            animation: shake .5s
+        }
+
+        .option.wrong .letter {
+            background: var(--err);
+            color: #fff;
+            border-color: var(--err)
+        }
+
+        .option.wrong .mark {
+            color: #fb7185
+        }
+
+        .option.dim {
+            opacity: .45;
+            filter: saturate(.4)
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(1)
+            }
+
+            45% {
+                transform: scale(1.035)
+            }
+
+            100% {
+                transform: scale(1)
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            20% {
+                transform: translateX(-8px)
+            }
+
+            40% {
+                transform: translateX(8px)
+            }
+
+            60% {
+                transform: translateX(-5px)
+            }
+
+            80% {
+                transform: translateX(5px)
+            }
+        }
+
+        /* ═══════════ 7) لوحة التفسير ═══════════ */
+        .feedback {
+            margin-top: 22px;
+            padding: 0 28px;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transform: translateY(26px);
+            transition: max-height .65s var(--tr-spring), opacity .45s, transform .5s var(--tr-spring), padding .4s
+        }
+
+        .feedback.show {
+            max-height: 2400px;
+            opacity: 1;
+            transform: none;
+            padding: 28px
+        }
+
+        .timeup-note {
+            display: none;
+            background: rgba(245, 158, 11, .14);
+            border: 1px solid rgba(245, 158, 11, .45);
+            color: #fbbf24;
+            font-weight: 800;
+            border-radius: var(--r-sm);
+            padding: 10px 16px;
+            margin-bottom: 16px
+        }
+
+        .timeup-note.on {
+            display: block;
+            animation: pop .4s
+        }
+
+        .fb-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, .08);
+            font-size: .98rem
+        }
+
+        .fb-row:last-of-type {
+            border-bottom: none
+        }
+
+        .fb-ic {
+            font-size: 1.3rem;
+            line-height: 1.4
+        }
+
+        .fb-row b {
+            color: #a5b4fc
+        }
+
+        .ok-row {
+            color: #34d399
+        }
+
+        .ok-row b {
+            color: #34d399
+        }
+
+        .fb-whys {
+            background: rgba(239, 68, 68, .06);
+            border: 1px solid rgba(239, 68, 68, .18);
+            border-radius: var(--r-md);
+            padding: 14px 18px;
+            margin: 14px 0 4px
+        }
+
+        .fb-whys-title {
+            color: #fb7185;
+            display: block;
+            margin-bottom: 8px
+        }
+
+        .fb-whys ul {
+            list-style: none;
+            display: grid;
+            gap: 8px
+        }
+
+        .fb-whys li {
+            display: flex;
+            gap: 10px;
+            font-size: .92rem;
+            color: var(--t2)
+        }
+
+        .fb-whys li .w-letter {
+            font-family: 'Space Grotesk';
+            font-weight: 700;
+            color: #fb7185;
+            min-width: 20px
+        }
+
+        .fb-actions {
+            text-align: left;
+            margin-top: 18px
+        }
+
+        /* ═══════════ 8) شاشة النتائج ═══════════ */
+        .results-wrap {
+            padding: 48px 24px 70px;
+            max-width: 900px
+        }
+
+        .res-hero {
+            text-align: center;
+            padding: 40px 24px;
+            animation: cardUp .6s var(--tr-spring)
+        }
+
+        .res-msg {
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            font-weight: 900;
+            margin-bottom: 20px
+        }
+
+        .score-ring {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 14px
+        }
+
+        .score-ring svg {
+            transform: rotate(-90deg);
+            width: 220px;
+            height: 220px
+        }
+
+        .rbg {
+            fill: none;
+            stroke: rgba(255, 255, 255, .08);
+            stroke-width: 12
+        }
+
+        .rfg {
+            fill: none;
+            stroke: url(#rg);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 527.8;
+            stroke-dashoffset: 527.8;
+            transition: stroke-dashoffset 1.8s cubic-bezier(.22, 1, .36, 1);
+            filter: drop-shadow(0 0 12px rgba(99, 102, 241, .6))
+        }
+
+        .score-val {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center
+        }
+
+        .score-val span {
+            font-family: 'Space Grotesk';
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--grad-s);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .score-val small {
+            color: var(--t2);
+            font-weight: 700
+        }
+
+        .res-quiz-name {
+            color: var(--t2);
+            font-weight: 700
+        }
+
+        .res-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 24px 0
+        }
+
+        .rstat {
+            padding: 20px;
+            text-align: center;
+            animation: cardUp .6s var(--tr-spring) both
+        }
+
+        .rstat:nth-child(2) {
+            animation-delay: .08s
+        }
+
+        .rstat:nth-child(3) {
+            animation-delay: .16s
+        }
+
+        .rstat:nth-child(4) {
+            animation-delay: .24s
+        }
+
+        .rstat .rv {
+            font-family: 'Space Grotesk';
+            font-size: 2rem;
+            font-weight: 700
+        }
+
+        .rstat .rl {
+            color: var(--t2);
+            font-size: .85rem;
+            font-weight: 700
+        }
+
+        .rv.ok {
+            color: var(--ok);
+            text-shadow: 0 0 18px rgba(16, 185, 129, .5)
+        }
+
+        .rv.err {
+            color: var(--err);
+            text-shadow: 0 0 18px rgba(239, 68, 68, .5)
+        }
+
+        .rv.neu {
+            color: #a5b4fc
+        }
+
+        .res-review {
+            padding: 26px;
+            animation: cardUp .6s var(--tr-spring) .3s both
+        }
+
+        .res-review h3 {
+            margin-bottom: 16px;
+            font-size: 1.15rem
+        }
+
+        .review-item {
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, .09);
+            border-radius: var(--r-md);
+            padding: 16px 18px;
+            margin-bottom: 12px
+        }
+
+        .review-item .rq {
+            font-size: .95rem;
+            margin-bottom: 10px;
+            text-align: left
+        }
+
+        .review-item .ra {
+            font-size: .88rem;
+            display: grid;
+            gap: 5px
+        }
+
+        .tag-err {
+            color: #fb7185;
+            font-weight: 700
+        }
+
+        .tag-ok {
+            color: #34d399;
+            font-weight: 700
+        }
+
+        .rr {
+            color: var(--t2);
+            font-size: .85rem;
+            margin-top: 8px;
+            border-top: 1px dashed rgba(255, 255, 255, .1);
+            padding-top: 8px
+        }
+
+        .no-errors {
+            text-align: center;
+            color: #34d399;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 20px
+        }
+
+        .res-actions {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 28px
+        }
+
+        /* ═══════════ 9) النوافذ المنبثقة ═══════════ */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 5, 20, .72);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: none;
+            place-items: center;
+            padding: 20px
+        }
+
+        .modal.open {
+            display: grid;
+            animation: fadeIn .3s
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        .modal-box {
+            max-width: 430px;
+            width: 100%;
+            padding: 34px;
+            text-align: center;
+            animation: cardUp .4s var(--tr-spring)
+        }
+
+        .modal-ic {
+            font-size: 3rem;
+            margin-bottom: 10px
+        }
+
+        .modal-box h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px
+        }
+
+        .modal-box p {
+            color: var(--t2);
+            font-size: .95rem;
+            margin-bottom: 22px
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        /* ═══════════ 10) الاستجابة لجميع الشاشات ═══════════ */
+        @media(max-width:820px) {
+            .quiz-topbar {
+                gap: 10px;
+                padding: 10px 14px
+            }
+
+            .qt-info {
+                order: 1;
+                flex: 1
+            }
+
+            .timer {
+                order: 2
+            }
+
+            .pbar-wrap {
+                order: 3;
+                flex-basis: 100%
+            }
+
+            .qcard {
+                padding: 22px 18px
+            }
+
+            .q-hint {
+                display: none
+            }
+
+            .feedback {
+                padding: 0 18px
+            }
+
+            .feedback.show {
+                padding: 20px 18px
+            }
+        }
+
+        @media(max-width:480px) {
+            .wrap {
+                padding: 14px
+            }
+
+            .hero {
+                padding: 44px 12px 20px
+            }
+
+            .btn {
+                padding: 11px 20px;
+                font-size: .92rem
+            }
+
+            .q-num {
+                font-size: 2rem
+            }
+
+            .score-ring,
+            .score-ring svg {
+                width: 180px;
+                height: 180px
+            }
+        }
+
+        @media(min-width:1800px) {
+            .wrap {
+                max-width: 1500px
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- الخلفية المتحركة -->
+    <canvas id="bgParticles" aria-hidden="true"></canvas>
+    <div class="orb orb1" aria-hidden="true"></div>
+    <div class="orb orb2" aria-hidden="true"></div>
+    <div class="orb orb3" aria-hidden="true"></div>
+    <canvas id="fxCanvas" aria-hidden="true"></canvas>
+
+    <!-- ═══════════ الشاشة 1: البداية ═══════════ -->
+    <div id="screen-welcome" class="screen active">
+        <header class="hero">
+            <span class="rocket" aria-hidden="true">🚀</span>
+            <h1>اختبارات البرمجة الشاملة 2026</h1>
+            <p>اختبر معلوماتك في أساسيات البرمجة وهندسة البرمجيات — 150 سؤالاً بتفسيرات تفصيلية بالعربية</p>
+            <div class="gstats" id="gStats"></div>
+        </header>
+        <div class="wrap">
+            <div class="resume glass hidden" id="resumeBanner"></div>
+            <div class="quiz-grid" id="quizGrid"></div>
+        </div>
+        <footer>صُنع بـ 💜 لتعلم البرمجة — جميع النتائج تُحفظ محلياً على جهازك</footer>
+    </div>
+
+    <!-- ═══════════ الشاشة 2: الاختبار ═══════════ -->
+    <div id="screen-quiz" class="screen">
+        <div class="wrap">
+            <div class="quiz-topbar glass">
+                <button class="icon-btn" id="btnExit" title="الخروج للرئيسية" aria-label="الخروج للرئيسية">🏠</button>
+                <div class="qt-info">
+                    <div class="qt-name" id="qtName"></div>
+                    <div class="qt-counter" id="qtCounter"></div>
+                </div>
+                <div class="pbar-wrap">
+                    <div class="pbar">
+                        <div class="pfill" id="pFill"></div>
+                    </div>
+                    <span class="p-pct" id="pPct">0%</span>
+                </div>
+                <div class="timer" id="timerBox" aria-label="المؤقت">
+                    <svg viewBox="0 0 48 48" aria-hidden="true">
+                        <circle class="tbg" cx="24" cy="24" r="20" />
+                        <circle class="tfg" id="tFg" cx="24" cy="24" r="20" />
+                    </svg>
+                    <span class="tnum" id="tNum">30</span>
+                </div>
+            </div>
+            <div class="qcard glass" id="qCard">
+                <div class="q-head"><span class="q-num" id="qNum"></span><span class="q-hint">⌨️ اضغط 1-4 أو A-D
+                        للإجابة</span></div>
+                <h2 class="q-text en" id="qText"></h2>
+                <div class="options" id="options"></div>
+            </div>
+            <div class="feedback glass" id="feedback" aria-live="polite">
+                <div class="timeup-note" id="fbTimeup">⏰ انتهى وقت السؤال! تم احتسابها إجابة خاطئة</div>
+                <div class="fb-row ok-row"><span class="fb-ic">✅</span>
+                    <div><b>الإجابة الصحيحة:</b> <span class="en" id="fbCorrect"></span></div>
+                </div>
+                <div class="fb-row"><span class="fb-ic">📌</span>
+                    <div><b>سبب الاختيار:</b> <span id="fbReason"></span></div>
+                </div>
+                <div class="fb-row"><span class="fb-ic">📖</span>
+                    <div><b>التفسير:</b> <span id="fbExp"></span></div>
+                </div>
+                <div class="fb-whys"><b class="fb-whys-title">❌ لماذا الخيارات الأخرى غير صحيحة؟</b>
+                    <ul id="fbWhys"></ul>
+                </div>
+                <div class="fb-actions"><button class="btn btn-primary btn-glow" id="btnNext">السؤال التالي →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ الشاشة 3: النتائج ═══════════ -->
+    <div id="screen-results" class="screen">
+        <div class="wrap results-wrap">
+            <div class="res-hero glass">
+                <div class="res-msg" id="resMsg"></div>
+                <div class="score-ring">
+                    <svg viewBox="0 0 200 200" aria-hidden="true">
+                        <defs>
+                            <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0" stop-color="#06b6d4" />
+                                <stop offset=".5" stop-color="#6366f1" />
+                                <stop offset="1" stop-color="#8b5cf6" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="rbg" cx="100" cy="100" r="84" />
+                        <circle class="rfg" id="rFg" cx="100" cy="100" r="84" />
+                    </svg>
+                    <div class="score-val"><span id="rPct">0%</span><small>النتيجة النهائية</small></div>
+                </div>
+                <div class="res-quiz-name" id="resQuizName"></div>
+            </div>
+            <div class="res-stats" id="resStats"></div>
+            <div class="res-review glass" id="resReview">
+                <h3>📋 مراجعة الأسئلة الخاطئة</h3>
+                <div id="reviewList"></div>
+            </div>
+            <div class="res-actions">
+                <button class="btn btn-primary" id="btnRetry">🔄 إعادة الاختبار</button>
+                <button class="btn btn-cyan" id="btnOther">📋 اختبار آخر</button>
+                <button class="btn btn-ghost" id="btnHome">🏠 الصفحة الرئيسية</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تأكيد الخروج -->
+    <div class="modal" id="exitModal" role="dialog" aria-modal="true">
+        <div class="modal-box glass">
+            <div class="modal-ic">🚪</div>
+            <h3>الخروج من الاختبار</h3>
+            <p>سيتم حفظ تقدمك تلقائياً ويمكنك المتابعة لاحقاً من الصفحة الرئيسية</p>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" id="mCancel">متابعة الاختبار</button>
+                <button class="btn btn-primary" id="mConfirm">💾 خروج وحفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="icon-btn fixed-mute" id="btnMute" title="كتم/تشغيل الصوت" aria-label="كتم الصوت">🔊</button>
+
+    <script>
+        'use strict';
+        /* ═══════════════════════════════════════════════════════════
+           البيانات: 150 سؤالاً في 6 اختبارات
+           كل سؤال: { q:النص, opts:الخيارات, c:فهرس الصحيح, reason, exp, why[] }
+           ═══════════════════════════════════════════════════════════ */
+        const Q = (q, opts, c, reason, exp, why) => ({ q, opts, c, reason, exp, why });
+
+        const QUIZZES = [
+            /* ═══════ اختبار 1: أساسيات البرمجة وهندسة البرمجيات ═══════ */
+            {
+                id: 'basics', icon: '📚', title: 'أساسيات البرمجة وهندسة البرمجيات', level: 'مبتدئ', lv: 'lv-b', ac: '#6366f1', mins: 12, questions: [
+                    Q("What is programming?", ["Repairing computer hardware", "Writing instructions for computers to perform tasks", "Designing user interfaces only", "Installing software applications"], 1,
+                        "لأن الملف يعرّف البرمجة بأنها كتابة تعليمات للحاسوب لتنفيذ مهام معينة",
+                        "البرمجة هي عملية كتابة أوامر وتعليمات بلغة يفهمها الحاسوب، مثل Java أو Python أو C++. هذه التعليمات تخبر الحاسوب ماذا يفعل.",
+                        ["إصلاح العتاد مجال الصيانة وليس البرمجة", "تصميم الواجهات جزء واحد فقط وليس التعريف الكامل", "تثبيت التطبيقات استخدام للبرمجيات وليس كتابة تعليمات"]),
+                    Q("According to the glossary, what is an algorithm?", ["A hardware component", "A step-by-step problem-solving method", "A programming language", "A software bug"], 1,
+                        "لأن الخوارزمية معرّفة بأنها طريقة خطوة بخطوة لحل المشكلات",
+                        "الخوارزمية هي مجموعة مرتبة من الخطوات التي تُستخدم لحل مشكلة أو تنفيذ مهمة.",
+                        ["الخوارزمية مفهوم برمجي وليست قطعة عتاد", "الخوارزمية تُكتب بلغة برمجة لكنها ليست لغة بذاتها", "الخطأ البرمجي Bug وليس خوارزمية"]),
+                    Q("What does \"syntax\" mean in programming?", ["The grammar rules for code", "The speed of the CPU", "A data storage container", "A software testing tool"], 0,
+                        "لأن Syntax تعني القواعد النحوية للكود",
+                        "كل لغة برمجة لها قواعد كتابية تسمى Syntax. إذا أخطأ المبرمج في هذه القواعد، قد لا يستطيع الحاسوب فهم الكود.",
+                        ["سرعة المعالج مرتبطة بالعتاد وليس بالقواعد النحوية", "حاويات التخزين هي المتغيرات وليس Syntax", "أدوات الاختبار أدوات منفصلة لا علاقة لها بالقواعد النحوية"]),
+                    Q("What does \"debug\" mean?", ["Writing new requirements", "Fixing code errors", "Installing an operating system", "Creating a user interface"], 1,
+                        "لأن Debug تعني إصلاح أخطاء الكود",
+                        "عملية الـ Debugging هي البحث عن الأخطاء في البرنامج ثم إصلاحها.",
+                        ["كتابة المتطلبات مرحلة تحليل وليست Debug", "تثبيت نظام التشغيل مهمة نظامية لا علاقة لها بالأخطاء", "إنشاء الواجهة عملية تصميم وليست إصلاح أخطاء"]),
+                    Q("In programming, variables are best described as:", ["Data storage containers", "Hardware devices", "Test reports", "Software bugs"], 0,
+                        "لأن المتغيرات هي حاويات تخزين البيانات",
+                        "المتغيرات تُستخدم لتخزين القيم داخل البرنامج مثل الصندوق الذي يمكن وضع قيمة بداخله.",
+                        ["الأجهزة عتاد مادي والمتغيرات مفهوم برمجي", "تقارير الاختبار مخرجات اختبار وليست متغيرات", "أخطاء البرمجيات عيوب وليست حاويات تخزين"]),
+                    Q("What is a function in programming?", ["A reusable block of code", "A physical switch", "A compiler", "A software bug"], 0,
+                        "لأن الدوال هي كتل تعليمات برمجية قابلة لإعادة الاستخدام",
+                        "الدالة هي مجموعة من التعليمات البرمجية المكتوبة لتنفيذ مهمة محددة، ويمكن استدعاؤها أكثر من مرة.",
+                        ["المفتاح الفيزيائي قطعة عتاد لا علاقة لها بالدوال", "المترجم Compiler أداة تحويل الكود وليس دالة", "الخطأ البرمجي عيب وليس كتلة كود قابلة لإعادة الاستخدام"]),
+                    Q("\"If it is raining → take an umbrella\" is an example of:", ["Looping", "If-Then conditional logic", "Variable assignment", "Compilation"], 1,
+                        "لأن الجملة تمثل شرطاً",
+                        "هذا مثال على منطق If-Then. إذا تحقق الشرط، نفّذ أمراً معيناً.",
+                        ["الحلقة Loop للتكرار والجملة لا تكرر شيئاً", "إسناد المتغيرات هو تخزين قيمة وليس شرط", "الترجمة Compilation تحويل الكود وليس منطق شرطي"]),
+                    Q("What is the main purpose of loops?", ["To repeat actions for a specific condition", "To translate code into machine code", "To store permanent data", "To fix bugs automatically"], 0,
+                        "لأن الحلقات تُستخدم للتكرار حسب شرط معين",
+                        "الحلقات تُستخدم عندما نريد تكرار عملية معينة عدة مرات طالما أن شرطاً معيناً متحقق.",
+                        ["ترجمة الكود وظيفة المترجم وليست الحلقات", "التخزين الدائم وظيفة قواعد البيانات والمتغيرات", "الحلقات لا تصلح الأخطاء تلقائياً"]),
+                    Q("Who is recognized as the first programmer?", ["Charles Babbage", "Ada Lovelace", "Grace Hopper", "Alan Turing"], 1,
+                        "لأن Ada Lovelace كتبت أول خوارزمية عام 1843",
+                        "آدا لوفلايس تُعتبر أول مبرمجة في التاريخ.",
+                        ["تشارلز بابدج صاحب الآلة لكنه لم يكتب أول خوارزمية", "جريس هوبر ظهرت لاحقاً وساهمت في COBOL", "آلان تورينج نظّر للحوسبة لكنه ليس أول مبرمج"]),
+                    Q("How was ENIAC programmed in the 1940s?", ["Using voice commands", "Using physical switches and punch cards", "Using mobile applications", "Using cloud services"], 1,
+                        "لأن ENIAC كان يُبرمج باستخدام مفاتيح فيزيائية وبطاقات مثقبة",
+                        "في بدايات الحوسبة، كانت الأجهزة كبيرة جداً وكان المبرمجون يستخدمون أدوات مادية.",
+                        ["الأوامر الصوتية لم تكن موجودة في الأربعينيات", "تطبيقات الجوال حديثة جداً مقارنة بعصر ENIAC", "الخدمات السحابية تقنية حديثة لم تكن متاحة حينها"]),
+                    Q("COBOL, created in 1959, was mainly used in:", ["Mobile games", "Banking systems", "AI image generation", "Web browsers"], 1,
+                        "لأن COBOL استُخدم في الأنظمة البنكية",
+                        "لغة COBOL من اللغات القديمة المهمة في البنوك والأنظمة المالية.",
+                        ["الألعاب لا تستخدم COBOL", "توليد الصور بالذكاء الاصطناعي يستخدم لغات حديثة", "متصفحات الويب مبنية بلغات أخرى"]),
+                    Q("Which language, created in 1991, is dominant today in AI/Web?", ["COBOL", "Python", "Assembly", "Machine code"], 1,
+                        "لأن Python ظهرت عام 1991 وأصبحت مهيمنة في AI والويب",
+                        "Python لغة عالية المستوى تُستخدم في تطوير الويب والذكاء الاصطناعي.",
+                        ["COBOL لغة بنكية قديمة وليست مهيمنة في AI", "Assembly لغة منخفضة المستوى صعبة الاستخدام", "لغة الآلة غير عملية للتطوير المباشر"]),
+                    Q("What do computers fundamentally understand?", ["English text only", "0s and 1s, called machine code", "UML diagrams", "Spoken instructions"], 1,
+                        "لأن الحواسيب تفهم فقط الأصفار والواحدات",
+                        "الحاسوب ينفذ تعليمات ممثلة بنظام ثنائي: 0 و1.",
+                        ["النصوص الإنجليزية تُترجم ولا يفهمها المعالج مباشرة", "مخططات UML أدوات تصميم للبشر", "التعليمات المنطوقة تحتاج معالجة معقدة"]),
+                    Q("Which statement best describes low-level languages?", ["They are very easy and slow", "They directly interact with hardware, such as Assembly", "They are only used for web design", "They never require translation"], 1,
+                        "لأن اللغات منخفضة المستوى تتعامل مباشرة مع العتاد",
+                        "اللغات منخفضة المستوى قريبة جداً من لغة الآلة وتسمح بتحكم دقيق.",
+                        ["اللغات منخفضة المستوى صعبة وليست سهلة", "تُستخدم أيضاً في الأنظمة وليس الويب فقط", "تحتاج ترجمة دائماً للغة الآلة"]),
+                    Q("Which language is an example of a mid-level language?", ["C", "HTML", "Python", "Assembly"], 0,
+                        "لأن لغة C مثال على اللغات متوسطة المستوى",
+                        "اللغات متوسطة المستوى تجمع بين خصائص اللغات منخفضة وعالية المستوى.",
+                        ["HTML لغة ترميز للويب وليست متوسطة المستوى", "Python لغة عالية المستوى", "Assembly لغة منخفضة المستوى"]),
+                    Q("Which statement best describes high-level languages?", ["They are abstracted from hardware and easier to learn", "They directly manage every hardware register", "They are only understood by CPUs without translation", "They cannot be used for web apps or AI"], 0,
+                        "لأن اللغات عالية المستوى بعيدة عن تفاصيل العتاد",
+                        "اللغات عالية المستوى تجعل كتابة البرامج أسهل.",
+                        ["إدارة كل سجل عتادي خاصية اللغات منخفضة المستوى", "تحتاج ترجمة قبل فهم المعالج لها", "تُستخدم بكثرة في تطبيقات الويب والذكاء الاصطناعي"]),
+                    Q("What is the correct journey of running Java code?", [".java → javac → .class bytecode → JVM → machine code/CPU", ".class → .java → JVM → javac → CPU", "JVM → .java → CPU → javac → .class", "CPU → JVM → .class → .java → javac"], 0,
+                        "لأن كود Java يمر بهذه الخطوات بالترتيب",
+                        "يكتب المبرمج الكود، يُترجم بـ javac، ثم تنفذه JVM.",
+                        ["الترتيب معكوس: يُكتب .java أولاً ويُترجم بـ javac", "الترتيب خاطئ: JVM تنفذ .class بعد الترجمة", "الترتيب عكسي بالكامل ولا يبدأ بـ CPU"]),
+                    Q("What is the main difference between programming and software engineering?", ["Programming is always team-based", "Software engineering adds process, scale, and collaboration", "Programming requires no logic", "Software engineering is only about testing"], 1,
+                        "لأن هندسة البرمجيات تضيف العملية والحجم والتعاون",
+                        "هندسة البرمجيات أشمل من مجرد كتابة الكود.",
+                        ["البرمجة قد تكون فردية وغير فريقية بالضرورة", "البرمجة تعتمد أساساً على المنطق", "هندسة البرمجيات تشمل التحليل والتصميم وليس الاختبار فقط"]),
+                    Q("In the skyscraper analogy, the software tester is similar to:", ["Architect", "Builder", "Inspector", "Electrician"], 2,
+                        "لأن المختبر يشبه المفتش في البناء",
+                        "دور المختبر هو التأكد من أن المنتج يعمل بشكل صحيح.",
+                        ["المهندس المعماري يشبه المحلل/المصمم", "الباني يشبه المبرمج", "الكهربائي يشبه منفذ جزء محدد من البناء"]),
+                    Q("Which statement best describes Agile in SDLC?", ["Linear: Requirements → Launch", "Iterative: 2-week sprints with continuous feedback", "No planning or documentation", "Testing only after the product is sold"], 1,
+                        "لأن Agile نموذج تكراري يعتمد على Sprints",
+                        "Agile يعني تطوير البرنامج على دفعات صغيرة ومتكررة.",
+                        ["هذا وصف النموذج الشلالي Waterfall", "Agile يعتمد على التخطيط والتوثيق المستمر", "الاختبار في Agile مستمر وليس بعد البيع"]),
+                    Q("Which statement best describes software testing?", ["Only finding bugs after release", "A systematic process to validate that software works as intended", "It replaces programming", "Only done by users"], 1,
+                        "لأن الاختبار عملية منهجية للتحقق",
+                        "اختبار البرمجيات يشمل Verification و Validation.",
+                        ["الاختبار يبدأ قبل الإطلاق وليس بعده فقط", "الاختبار لا يستبدل البرمجة بل يكملها", "الاختبار الاحترافي يقوم به مختبرون متخصصون"]),
+                    Q("What was the \"first bug\" in computer history?", ["A virus on a smartphone", "A moth stuck in a relay of Harvard Mark II in 1947", "A database error in Pepsi", "A unit mismatch at NASA"], 1,
+                        "لأن مهندسين وجدوا فراشة داخل جهاز Harvard Mark II",
+                        "أصبح مصطلح Bug يُستخدم للإشارة إلى الأخطاء في البرامج.",
+                        ["فيروس الهاتف ظاهرة حديثة جداً", "خطأ بيبسي مثال لاحق على مشاكل البرمجيات", "خلل وحدات NASA مثال لفشل برمجي وليس أول Bug"]),
+                    Q("Which examples show why software testing is important?", ["Pepsi printing too many winning caps", "NASA losing a spacecraft", "Samsung Galaxy Note7 battery disaster", "All of the above"], 3,
+                        "لأن جميع الأمثلة توضح أهمية الاختبار",
+                        "الأخطاء البرمجية قد تؤدي إلى خسائر كبيرة جداً.",
+                        ["مثال صحيح لكنه ليس الوحيد", "مثال صحيح لكنه ليس الوحيد", "مثال صحيح لكنه ليس الوحيد"]),
+                    Q("What is automation testing?", ["Writing code once so the computer automatically checks the software", "Manually clicking every button", "Replacing developers with robots", "Turning off the computer"], 0,
+                        "لأن الاختبار الآلي يعني كتابة كود للفحص التلقائي",
+                        "يوفر الوقت ويسمح بتشغيل الاختبارات بشكل متكرر.",
+                        ["النقر اليدوي اختبار يدوي وليس آلي", "الاختبار الآلي لا يستبدل المطورين", "لا علاقة لإطفاء الجهاز بالاختبار الآلي"]),
+                    Q("What does Continuous Integration (CI) mean for testers?", ["Tests are run automatically when code is pushed", "Tests are only run once a year", "Deployment happens without testing", "Developers skip code reviews"], 0,
+                        "لأن CI يعني تشغيل الاختبارات تلقائياً عند رفع الكود",
+                        "يساعد على اكتشاف الأخطاء مبكراً.",
+                        ["الاختبار مستمر مع كل تعديل وليس سنوياً", "النشر يتم بعد نجاح الاختبارات", "مراجعة الكود جزء أساسي من CI/CD"])
+                ]
+            },
+
+            /* ═══════ اختبار 2: تدفق التحكم Control Flow ═══════ */
+            {
+                id: 'control', icon: '🔀', title: 'تدفق التحكم Control Flow', level: 'مبتدئ', lv: 'lv-b', ac: '#06b6d4', mins: 12, questions: [
+                    Q("What is the main purpose of control flow statements in Java?", ["To store data in variables", "To make decisions or choose between multiple execution paths", "To define classes and objects only", "To import external packages"], 1,
+                        "لأن عبارات تدفق التحكم تُستخدم لاتخاذ قرارات",
+                        "البرامج تحتاج لتغيير سلوكها حسب شرط معين.",
+                        ["تخزين البيانات وظيفة المتغيرات", "تعريف الفئات والكائنات وظيفة OOP", "استيراد الحزم عبارة import"]),
+                    Q("What type must the condition inside an `if` statement be?", ["int", "String", "boolean", "double"], 2,
+                        "لأن الشرط يجب أن يكون تعبيراً منطقياً",
+                        "في Java، عبارة if تعتمد على شرط منطقي يعطي true أو false.",
+                        ["int رقمي وليس منطقياً", "String نصي وليس منطقياً", "double رقم عشري وليس منطقياً"]),
+                    Q("What happens if the condition in an `if` statement is false?", ["The code block runs anyway", "The code block is skipped", "The program stops immediately", "The compiler shows an error"], 1,
+                        "لأنه يتم تخطي كتلة الكود",
+                        "إذا كان الشرط خاطئاً، يتجاهل الكود وينتقل إلى ما بعده.",
+                        ["الكتلة لا تنفذ إذا كان الشرط false", "البرنامج لا يتوقف بل يستمر", "لا يوجد خطأ ترجمة، الشرط false أمر طبيعي"]),
+                    Q("Which statement is best for one action if true and another if false?", ["if only", "if-else", "for loop", "break"], 1,
+                        "لأن if-else تعطي مسارين",
+                        "إذا الشرط true نفذ الكتلة الأولى، وإلا نفذ الثانية.",
+                        ["if وحدها تنفذ فقط عند تحقق الشرط", "for حلقة تكرار وليست شرطية", "break للخروج من حلقة وليس للشرط"]),
+                    Q("When should you use `else-if`?", ["When there is only one condition", "When there are multiple possible conditions", "When you want to repeat code", "When you want to stop the program"], 1,
+                        "لأن else-if تُستخدم لعدة شروط",
+                        "تُستخدم عندما يكون لدينا أكثر من شرط يجب فحصه بالترتيب.",
+                        ["شرط واحد يكفيه if عادية", "التكرار وظيفة الحلقات", "إيقاف البرنامج وظيفة break أو return"]),
+                    Q("In the even/odd task, if the number is not even, print:", ["\"Even number\"", "\"Odd number\"", "\"Invalid number\"", "\"No output\""], 1,
+                        "لأن الرقم الفردي يطبع Odd number",
+                        "عند عدم تحقق شرط الزوجية يتم تنفيذ جزء else.",
+                        ["Even تُطبع عندما يكون الرقم زوجياً", "الرقم صالح لكنه فردي وليس غير صالح", "سيطبع رسالة لأن else تنفذ"]),
+                    Q("When is it best to use a `switch` statement?", ["When checking a range of numbers", "When checking one variable against fixed, known values", "When writing complex mathematical formulas", "When repeating code many times"], 1,
+                        "لأن switch يُستخدم لمتغير واحد مقارنة بقيم ثابتة",
+                        "مناسبة لأيام الأسبوع وخيارات القائمة والدرجات.",
+                        ["نطاقات الأرقام تُعالج بـ if-else if", "المعادلات المعقدة تحتاج منطق برمجي وليس switch", "التكرار وظيفة الحلقات"]),
+                    Q("Which data type can be used in a Java `switch` expression?", ["double", "long", "int", "boolean"], 2,
+                        "لأن int من الأنواع المدعومة في switch",
+                        "الأنواع المدعومة تشمل byte, short, int, char, String.",
+                        ["double غير مدعوم في switch", "long غير مدعوم في switch التقليدية", "boolean غير مسموح في switch"]),
+                    Q("What is the purpose of `break` in a `switch` statement?", ["To restart the switch", "To prevent fall-through", "To declare the default case", "To stop the entire program"], 1,
+                        "لأن break تمنع تنفيذ الحالات التالية",
+                        "بدون break، سيستمر في تنفيذ الحالات التالية أيضاً.",
+                        ["إعادة التشغيل ليست وظيفة break", "default هي التي تعلن الحالة الافتراضية", "break توقف الـ switch فقط وليس البرنامج كله"]),
+                    Q("What is a common mistake with `switch` statements?", ["Forgetting `break;`, causing fall-through", "Using too many variables", "Writing comments inside the code", "Using `Scanner` for input"], 0,
+                        "لأن نسيان break يؤدي لتنفيذ حالات متعددة",
+                        "قد يؤدي إلى نتائج غير متوقعة.",
+                        ["عدد المتغيرات لا علاقة له بمشاكل switch", "التعليقات ممارسة جيدة وليست خطأ", "استخدام Scanner لقراءة المدخلات أمر طبيعي"]),
+                    Q("Which statement is true about the `default` case?", ["It is mandatory", "It is optional but good practice", "It must always be the first case", "It only works with numbers"], 1,
+                        "لأن default اختيارية لكنها ممارسة جيدة",
+                        "تُنفذ إذا لم تتطابق القيمة مع أي حالة.",
+                        ["default اختيارية وليست إلزامية", "يمكن وضعها في أي مكان وعادة في النهاية", "تعمل مع الأنواع المدعومة في switch كلها"]),
+                    Q("Which class is used to read input from the user?", ["Scanner", "String", "break", "System"], 0,
+                        "لأن Scanner تُستخدم لقراءة إدخال المستخدم",
+                        "نستخدمها لقراءة رقم، نص، أو حرف من لوحة المفاتيح.",
+                        ["String للنصوص وليست لقراءة الإدخال", "break للخروج من الحلقات", "System للطباعة وليست لقراءة الإدخال مباشرة"]),
+                    Q("What should the program print if the user enters grade `A`?", ["\"Very Good\"", "\"Excellent\"", "\"Good\"", "\"Invalid grade\""], 1,
+                        "لأن A تعني Excellent",
+                        "في مهمة الدرجات، A → Excellent.",
+                        ["Very Good تقابل B عادة", "Good تقابل C", "A تقدير صالح وليس غير صالح"]),
+                    Q("What is a loop in Java?", ["A control structure that repeats a block of code while a condition is true", "A variable that stores text", "A method that returns a number", "A class that handles exceptions"], 0,
+                        "لأن الحلقة تسمح بتكرار كتلة من الكود",
+                        "تُستخدم لتكرار تنفيذ كود معين عدة مرات.",
+                        ["المتغير النصي يخزن نصاً وليس حلقة", "الدالة تُرجع قيمة وليست حلقة", "الفئة تتعامل مع الاستثناءات وليست حلقة"]),
+                    Q("Which loop type is best when you know exactly how many times to repeat?", ["while loop", "do-while loop", "for loop", "switch statement"], 2,
+                        "لأن for مناسبة عند معرفة عدد المرات",
+                        "تحتوي على بداية وشرط وتحديث في مكان واحد.",
+                        ["while تناسب عندما لا نعرف عدد التكرارات", "do-while تناسب التنفيذ مرة على الأقل", "switch للفروع وليس للتكرار"]),
+                    Q("What are the three parts inside a `for` loop header?", ["Initialization, condition, update", "Input, process, output", "Start, stop, return", "Declaration, import, execution"], 0,
+                        "لأن for تحتوي على التهيئة والشرط والتحديث",
+                        "for(initialization; condition; update) { code }",
+                        ["إدخال/معالجة/إخراج مفاهيم عامة وليست أجزاء for", "بداية/توقف/إرجاع ليست التسمية الصحيحة", "تصريح/استيراد/تنفيذ ليست أجزاء ترويسة for"]),
+                    Q("How many times does this loop run? for(int i = 1; i <= 5; i++)", ["4 times", "5 times", "6 times", "Infinite times"], 1,
+                        "لأن الحلقة تعمل مع القيم 1، 2، 3، 4، 5",
+                        "بعد أن تصبح i = 6 يتوقف الشرط.",
+                        ["تعمل 5 مرات لأن القيم من 1 إلى 5", "لا تصل إلى 6 لأن الشرط i <= 5", "الحلقة محدودة وليست لانهائية"]),
+                    Q("Which loop is best when the number of repetitions is unknown?", ["for loop", "while loop", "switch statement", "if statement"], 1,
+                        "لأن while تناسب الشرط غير المعروف",
+                        "تفحص الشرط قبل تنفيذ الكود وتستمر طالما الشرط صحيح.",
+                        ["for تناسب عدد التكرارات المعروف", "switch للفروع وليس للتكرار", "if للشرط المفرد وليس للتكرار"]),
+                    Q("What is special about a `do-while` loop?", ["It checks the condition before running", "It runs at least once before checking the condition", "It cannot use boolean conditions", "It only works with numbers"], 1,
+                        "لأن do-while تعمل مرة واحدة على الأقل",
+                        "جسم الحلقة يُنفذ أولاً، ثم يتم فحص الشرط.",
+                        ["while تتحقق قبل التنفيذ وليس do-while", "يمكنها استخدام شروط boolean", "تعمل مع أي نوع بيانات صالح للشرط"]),
+                    Q("Which situation is best for using a `do-while` loop?", ["Counting from 1 to 10", "Showing a menu or retrying an action", "Declaring variables", "Writing comments"], 1,
+                        "لأن do-while مناسبة للقوائم وإعادة المحاولة",
+                        "يجب عرض القائمة مرة واحدة على الأقل.",
+                        ["العد من 1 إلى 10 يُنجز بـ for", "تصريح المتغيرات لا يحتاج حلقة", "كتابة التعليقات لا علاقة لها بالحلقات"]),
+                    Q("What does the `break` statement do inside a loop?", ["It skips the current iteration", "It stops the loop immediately", "It restarts the loop", "It pauses the program"], 1,
+                        "لأن break توقف الحلقة فوراً",
+                        "تُستخدم للخروج من الحلقة قبل اكتمال الشرط.",
+                        ["تخطي الدورة الحالية وظيفة continue", "إعادة تشغيل الحلقة ليست وظيفة break", "break توقف الحلقة فقط وليس البرنامج كله"]),
+                    Q("What does the `continue` statement do inside a loop?", ["It stops the entire loop permanently", "It skips the current iteration and goes to the next one", "It exits the program", "It repeats the same iteration forever"], 1,
+                        "لأن continue تتخطى الدورة الحالية",
+                        "يتجاهل باقي الكود في الدورة الحالية وينتقل للتالية.",
+                        ["إيقاف الحلقة نهائياً وظيفة break", "continue لا تخرج من البرنامج", "لا تكرر نفس الدورة بل تنتقل للتالية"]),
+                    Q("Which logical operator is used when both conditions must be true?", ["`||`", "`&&`", "`!`", "`==`"], 1,
+                        "لأن && تعني \"و\" المنطقية",
+                        "تعطي true فقط إذا كان الشرطان صحيحين معاً.",
+                        ["|| تعني أو ويكفي تحقق أحد الشرطين", "! عكس الشرط وليست ربطاً", "== مقارنة قيم وليست ربط شرطين"]),
+                    Q("What is a method in Java?", ["A block of code that performs a specific task and can be called", "A loop that repeats forever", "A variable that stores only numbers", "A switch case"], 0,
+                        "لأن الدالة كتلة من الكود لمهمة محددة",
+                        "تساعد على تنظيم الكود وإعادة استخدامه.",
+                        ["الحلقة اللانهائية ليست تعريف الدالة", "المتغير يخزن قيماً وليس دالة", "switch case فرع شرطي وليس دالة"]),
+                    Q("What does a method with a return type do?", ["It only prints text", "It performs a task and sends back a result", "It stops the program immediately", "It repeats a loop automatically"], 1,
+                        "لأن الدالة تعيد نتيجة بعد التنفيذ",
+                        "تعيد قيمة يمكن استخدامها في جزء آخر من البرنامج.",
+                        ["الطباعة وظيفة println وليس جوهر الدالة ذات النوع", "الدالة لا توقف البرنامج", "الدالة لا تكرر الحلقات تلقائياً"])
+                ]
+            },
+
+            /* ═══════ اختبار 3: المصفوفات والفئات Arrays & Classes ═══════ */
+            {
+                id: 'arrays', icon: '📦', title: 'المصفوفات والفئات Arrays & Classes', level: 'متوسط', lv: 'lv-m', ac: '#10b981', mins: 12, questions: [
+                    Q("What is an array in Java?", ["A variable that stores only one value", "A method that returns a boolean", "A container that holds multiple values of the same data type", "A loop that repeats code"], 2,
+                        "لأن المصفوفات حاويات تخزن عدة قيم من نفس النوع",
+                        "تُستخدم لتخزين مجموعة قيم مرتبطة داخل متغير واحد.",
+                        ["المتغير المفرد يخزن قيمة واحدة فقط", "الدالة المنطقية تُرجع true/false وليست مصفوفة", "الحلقة تكرر الكود وليست حاوية"]),
+                    Q("Why do we use arrays?", ["To create multiple classes", "To store multiple values in a single variable", "To replace constructors", "To avoid using objects"], 1,
+                        "لأن المصفوفات تخزن عدة قيم في متغير واحد",
+                        "تجعل الكود أكثر تنظيماً.",
+                        ["إنشاء الفئات لا علاقة له بالمصفوفات", "المصفوفات لا تستبدل الـ constructors", "المصفوفات والكائنات مفاهيم متكاملة"]),
+                    Q("What is the index of the first element in a Java array?", ["-1", "0", "1", "It depends on the array size"], 1,
+                        "لأن الفهرسة تبدأ من 0",
+                        "أول عنصر موقعه 0 وليس 1.",
+                        ["لا توجد فهرسة سالبة في Java", "الفهرسة تبدأ من 0 وليس 1", "البداية دائماً 0 بغض النظر عن الحجم"]),
+                    Q("What does the length of an array mean?", ["The size of each element in bytes", "The number of loops used", "The number of elements in the array", "The last index value"], 2,
+                        "لأن Length هو عدد العناصر",
+                        "آخر فهرس يساوي length - 1.",
+                        ["حجم العنصر بالبايت ليس معنى length", "عدد الحلقات لا علاقة له بطول المصفوفة", "آخر فهرس يساوي length - 1 وليس length"]),
+                    Q("What is an element in an array?", ["The class name", "An individual value stored in the array", "The constructor", "The index only"], 1,
+                        "لأن العنصر هو القيمة الفردية",
+                        "كل قيمة داخل المصفوفة تسمى عنصراً.",
+                        ["اسم الفئة لا علاقة له بالعناصر", "المنشئ ينشئ الكائنات وليس عنصراً", "الفهرس موقع العنصر وليس العنصر نفسه"]),
+                    Q("Which statement best describes a one-dimensional array?", ["A collection of different data types", "A group of classes and objects", "A method with no return type", "A collection of same type elements at contiguous memory locations"], 3,
+                        "لأن المصفوفة أحادية البعد عناصر من نفس النوع في مواقع ذاكرة متجاورة",
+                        "تخزن قائمة قيم من نفس النوع.",
+                        ["المصفوفة تخزن نوعاً واحداً وليست أنواعاً مختلفة", "مجموعة الفئات والكائنات مفهوم OOP", "الدالة بلا إرجاع void وليست مصفوفة"]),
+                    Q("How do you access an element in a one-dimensional array?", ["By using its class name only", "By using its index number", "By using the static keyword", "By using constructor chaining"], 1,
+                        "لأن الوصول يتم برقم الفهرس",
+                        "نستخدم اسم المصفوفة مع رقم الفهرس.",
+                        ["اسم الفئة وحده لا يصل للعناصر", "static لتعريف أعضاء الفئة وليس للوصول للعناصر", "تسلسل المنشئات مفهوم آخر تماماً"]),
+                    Q("Which of the following can be used to traverse an array?", ["Traditional for loop", "Enhanced for-each loop", "while loop", "All of the above"], 3,
+                        "لأن جميع الطرق صالحة",
+                        "يمكن استخدام أي من هذه الحلقات.",
+                        ["for التقليدية صالحة لكن ليست الطريقة الوحيدة", "for-each صالحة لكن ليست الطريقة الوحيدة", "while صالحة لكن ليست الطريقة الوحيدة"]),
+                    Q("Which common array operations are mentioned?", ["Search", "Sort", "Average and max/min", "All of the above"], 3,
+                        "لأن جميع العمليات مذكورة",
+                        "المصفوفات تُستخدم للبحث والترتيب والحسابات.",
+                        ["البحث عملية صحيحة لكن ليست الوحيدة", "الترتيب عملية صحيحة لكن ليست الوحيدة", "المتوسط والأقصى/الأدنى صحيحة لكن ليست الوحيدة"]),
+                    Q("If the searched value is not found, what should display?", ["Its index", "The average", "A message that the value is not found", "The constructor name"], 2,
+                        "لأن البرنامج يجب أن يعرض رسالة عدم العثور",
+                        "يجعل البرنامج أكثر وضوحاً للمستخدم.",
+                        ["لا يوجد فهرس لعرضه لأن القيمة غير موجودة", "المتوسط لا علاقة له بنتيجة البحث", "اسم المنشئ لا علاقة له بالبحث"]),
+                    Q("What is a two-dimensional array?", ["A loop inside a method", "An array of arrays, useful for tables or matrices", "A class with two constructors", "A static variable"], 1,
+                        "لأن المصفوفة ثنائية البعد مصفوفة من مصفوفات",
+                        "تشبه الجدول الذي يحتوي على صفوف وأعمدة.",
+                        ["حلقة داخل دالة ليست مصفوفة ثنائية", "فئة بمنشئين مفهوم overloading", "متغير static ليس مصفوفة ثنائية"]),
+                    Q("How do you access an element in a two-dimensional array?", ["Using one index only", "Using the static keyword", "Using row and column indexes", "Using a constructor"], 2,
+                        "لأن الوصول يحتاج تحديد الصف والعمود",
+                        "كل عنصر يقع داخل صف وعمود.",
+                        ["فهرس واحد يكفي للمصفوفة الأحادية فقط", "static لا يُستخدم للوصول للعناصر", "المنشئ ينشئ الكائنات وليس للوصول"]),
+                    Q("In classes and objects, what is a class?", ["A real item created at runtime", "A blueprint, template, or design", "A loop condition", "An array index"], 1,
+                        "لأن الفئة مخطط أو تصميم",
+                        "تحدد الخصائص والسلوكيات للكائنات.",
+                        ["العنصر الحقيقي هو الكائن وليس الفئة", "شرط الحلقة مفهوم مختلف تماماً", "فهرس المصفوفة مفهوم مختلف"]),
+                    Q("What is an object?", ["A blueprint for classes", "A syntax error", "A real instance created from a class", "A memory location for loops"], 2,
+                        "لأن الكائن نسخة حقيقية من الفئة",
+                        "هو النسخة الفعلية المبنية من الفئة.",
+                        ["المخطط هو الفئة وليس الكائن", "خطأ الصياغة مفهوم مختلف", "موقع الذاكرة للحلقات ليس تعريف الكائن"]),
+                    Q("Why do we use classes and objects?", ["To avoid using methods", "To make arrays store different data types", "To replace Java constructors", "To write the class once and create many objects"], 3,
+                        "لأننا نكتب الفئة مرة واحدة وننشئ كائنات كثيرة",
+                        "تساعد على تنظيم الكود وإعادة استخدامه.",
+                        ["الهدف ليس تجنب الدوال", "المصفوفات تخزن نوعاً واحداً على أي حال", "المنشئات لا تُستبدل بالفئات والكائنات"]),
+                    Q("What is the purpose of getters and setters?", ["To delete objects automatically", "To access and modify data safely", "To convert arrays into classes", "To avoid using methods"], 1,
+                        "لأنها تصل للبيانات وتعدلها بشكل آمن",
+                        "تحمي بيانات الكائن من القيم غير الصحيحة.",
+                        ["حذف الكائنات تلقائياً مهمة Garbage Collector", "لا تحول المصفوفات لفئات", "هي نفسها دوال وليست بديلاً عنها"]),
+                    Q("What is a constructor?", ["A loop that traverses an array", "A variable that stores array length", "A special method to initialize objects when created", "A static class name"], 2,
+                        "لأن الـ constructor يهيئ الكائنات عند إنشائها",
+                        "يُستخدم لإعداد الكائن الجديد.",
+                        ["الحلقة للتكرار وليست منشئاً", "متغير الطول يخزن رقماً وليس منشئاً", "static ليس اسم فئة"]),
+                    Q("Which is true about a constructor?", ["It must return void", "It must be static", "It cannot have parameters", "It has the same name as the class and no return type"], 3,
+                        "لأن الـ constructor له نفس اسم الفئة بدون نوع إرجاع",
+                        "يختلف عن الدالة العادية في هاتين النقطتين.",
+                        ["المنشئ لا يُرجع قيمة إطلاقاً حتى void", "ليس شرطاً أن يكون static", "يمكن أن يحتوي معاملات"]),
+                    Q("What is a default constructor?", ["A constructor with two parameters", "A constructor with no parameters", "A constructor that returns an integer", "A method defined outside the class"], 1,
+                        "لأن الـ Default لا يحتوي على معاملات",
+                        "لا يستقبل أي قيم عند إنشاء الكائن.",
+                        ["ذات معاملين هو parameterized", "المنشئ لا يُرجع integer", "يُعرَّف داخل الفئة كأي منشئ"]),
+                    Q("What is a parameterized constructor?", ["A constructor with no parameters", "A constructor that cannot be overloaded", "A constructor that receives values to initialize with specific values", "A constructor that deletes objects"], 2,
+                        "لأنه يمرر قيم لتهيئة الكائن",
+                        "يسمح بإنشاء كائن بقيم جاهزة.",
+                        ["بدون معاملات هو default", "يمكن عمل overloading للمنشئات", "المنشئ لا يحذف الكائنات"]),
+                    Q("What is constructor overloading?", ["Calling a method multiple times", "Creating many arrays", "Using static variables inside methods", "Having multiple constructors with different parameters"], 3,
+                        "لأنه وجود أكثر من constructor بمعاملات مختلفة",
+                        "يسمح بإنشاء كائنات بطرق مختلفة.",
+                        ["استدعاء دالة عدة مرات مفهوم مختلف", "إنشاء مصفوفات لا علاقة له بالمنشئات", "static داخل الدوال ليس تعريف overloading"]),
+                    Q("What is constructor chaining?", ["A loop calls another loop", "A constructor calls another constructor using this(...)", "A class inherits from another class", "An array stores another array"], 1,
+                        "لأن الـ constructor يستدعي آخر باستخدام this",
+                        "يُستخدم لتجنب تكرار الكود.",
+                        ["حلقة تستدعي أخرى ليست chaining", "الوراثة تستخدم extends وليس this()", "مصفوفة تخزن أخرى ليست chaining"]),
+                    Q("When is the `this` keyword useful?", ["To make a variable static", "To create an array", "To distinguish between local parameters and instance variables", "To terminate a loop"], 2,
+                        "لأن this تفرق بين المعاملات ومتغيرات الفئة",
+                        "تُستخدم عندما تكون الأسماء متشابهة.",
+                        ["this لا تجعل المتغير static", "لا تنشئ مصفوفات", "لا تُنهي الحلقات"]),
+                    Q("What happens if you don't use `this` when names are the same?", ["Java automatically updates the instance variable", "Constructor overloading happens", "The object is deleted", "The instance variable may not be updated"], 3,
+                        "لأن Java تفترض أنك تشير للمعامل المحلي",
+                        "قد يبقى الحقل بقيمته الافتراضية.",
+                        ["Java لن تفهم قصدك تلقائياً بل ستشير للمعامل", "overloading لا يحدث هنا", "الكائن لا يُحذف"]),
+                    Q("What does the `static` keyword mean in Java?", ["It belongs only to one object", "It belongs to the class itself, not to a specific object", "It prevents the class from being used", "It creates a two-dimensional array"], 1,
+                        "لأن static تعني الانتماء للفئة",
+                        "يكون مشتركاً بين جميع كائنات الفئة.",
+                        ["static يعني العكس: ليس لشيء واحد", "لا يمنع استخدام الفئة", "لا ينشئ مصفوفات ثنائية"])
+                ]
+            },
+
+            /* ═══════ اختبار 4: البرمجة الكائنية OOP ═══════ */
+            {
+                id: 'oop', icon: '🧱', title: 'البرمجة الكائنية OOP', level: 'متوسط', lv: 'lv-m', ac: '#8b5cf6', mins: 13, questions: [
+                    Q("What is Object-Oriented Programming (OOP)?", ["A programming paradigm centered around objects that combine data and behavior", "A programming language for web only", "A database management system", "A hardware design methodology"], 0,
+                        "لأن OOP نموذج يتمحور حول الكائنات",
+                        "تعتمد على مفهوم الكائنات التي تجمع بيانات وسلوكيات.",
+                        ["OOP نموذج برمجي وليس لغة ويب فقط", "نظام إدارة قواعد البيانات مفهوم مختلف", "منهجية تصميم العتاد مجال مختلف"]),
+                    Q("What are the two main components of an object?", ["Loops and conditions", "Data (fields) and behavior (methods)", "Classes and interfaces only", "Variables and constants only"], 1,
+                        "لأن الكائن يحتوي على بيانات وسلوك",
+                        "الحقول تمثل حالة الكائن والدوال تمثل الأفعال.",
+                        ["الحلقات والشروط أدوات تحكم وليست مكونات الكائن", "الفئات والواجهات هياكل وليست مكونات الكائن", "الثوابت جزء من المتغيرات فقط"]),
+                    Q("In the car analogy, which represents \"properties\"?", ["Drive, brake, start engine", "Color, model, engine type", "Speed limit and fuel price", "Road, traffic, destination"], 1,
+                        "لأن الخصائص هي اللون والموديل ونوع المحرك",
+                        "هي البيانات التي تصف الكائن.",
+                        ["القيادة والفرملة أفعال وليست خصائص", "حدود السرعة وسعر الوقود عوامل خارجية", "الطريق والمرور بيئة وليست خصائص"]),
+                    Q("In the car analogy, which represents \"actions\"?", ["Color, model, engine type", "Drive, brake, start engine", "Price, warranty, category", "Name, age, grade"], 1,
+                        "لأن الأفعال هي القيادة والفرملة والتشغيل",
+                        "هي العمليات التي يقوم بها الكائن.",
+                        ["اللون والموديل خصائص وليست أفعالاً", "السعر والضمان تفاصيل تجارية", "الاسم والعمر صفات وليست أفعالاً"]),
+                    Q("What is the main purpose of OOP?", ["To organize software as reusable, modular, real-world-like components", "To make programs run faster", "To replace all procedural languages", "To avoid writing methods inside classes"], 0,
+                        "لأن الهدف تنظيم البرمجيات كمكونات قابلة لإعادة الاستخدام",
+                        "يجعل الكود أسهل في الفهم والصيانة.",
+                        ["السرعة ليست الهدف الرئيسي", "لا تستبدل اللغات الإجرائية بالكامل", "الدوال داخل الفئات أساسية في OOP"]),
+                    Q("Which OOP benefit is \"use existing code via inheritance & interfaces\"?", ["Maintainability", "Reusability", "Scalability", "Modularity"], 1,
+                        "لأن إعادة الاستخدام عبر الوراثة والواجهات",
+                        "الاستفادة من الكود المكتوب مسبقاً.",
+                        ["قابلية الصيانة تعني سهولة التعديل", "قابلية التوسع تعني النمو مع الاحتياجات", "النمطية تعني التقسيم لوحدات"]),
+                    Q("Which OOP benefit is achieved because \"encapsulation isolates changes\"?", ["Reusability", "Maintainability", "Scalability", "Real-world modeling"], 1,
+                        "لأن التغليف يعزل التغييرات",
+                        "يمكن تعديل الكود دون التأثير على بقية الأجزاء.",
+                        ["إعادة الاستخدام عبر الوراثة", "قابلية التوسع ليست بسبب عزل التغييرات", "النمذجة الواقعية ميزة أخرى"]),
+                    Q("What is a class in OOP?", ["A real instance with actual values", "A blueprint or template that defines properties and behavior", "A method that returns a value", "A loop that repeats code"], 1,
+                        "لأن الفئة مخطط أو قالب",
+                        "تصف كيف سيكون الكائن.",
+                        ["النسخة الحقيقية هي الكائن", "الدالة سلوك وليست فئة", "الحلقة تكرار وليست فئة"]),
+                    Q("What is an object in OOP?", ["A blueprint or template", "A real instance of a class with actual values", "A private field inside a class", "A type of access modifier"], 1,
+                        "لأن الكائن نسخة حقيقية من الفئة",
+                        "هو الشيء الفعلي الذي يمكن استخدامه.",
+                        ["المخطط هو الفئة وليس الكائن", "الحقل الخاص جزء من الفئة", "محدد الوصول أداة تقييد وليس كائناً"]),
+                    Q("Which is NOT one of the four pillars of OOP?", ["Encapsulation", "Inheritance", "Compilation", "Abstraction"], 2,
+                        "لأن الترجمة Compilation ليست من أركان OOP",
+                        "الأركان هي التغليف والوراثة وتعدد الأشكال والتجريد.",
+                        ["التغليف ركن أساسي", "الوراثة ركن أساسي", "التجريد ركن أساسي"]),
+                    Q("Which pillar is \"hide internal state; expose only what's necessary\"?", ["Inheritance", "Polymorphism", "Encapsulation", "Scalability"], 2,
+                        "لأن التغليف يخفي الحالة الداخلية",
+                        "حماية البيانات من الوصول المباشر.",
+                        ["الوراثة لنقل الخصائص", "تعدد الأشكال للأشكال المتعددة", "قابلية التوسع ليست ركناً"]),
+                    Q("Which pillar means \"show essential features, hide complexity\"?", ["Encapsulation", "Abstraction", "Inheritance", "Polymorphism"], 1,
+                        "لأن التجريد يظهر الميزات الأساسية",
+                        "تقديم واجهة بسيطة تخفي التعقيد.",
+                        ["التغليف يخفي البيانات ويرتبط بالحماية", "الوراثة لنقل الخصائص", "تعدد الأشكال لأشكال متعددة"]),
+                    Q("What is encapsulation?", ["The bundling of data and methods within a single unit or class", "Converting code to machine language", "A technique for sorting arrays", "A way to connect databases"], 0,
+                        "لأن التغليف جمع البيانات والدوال في وحدة واحدة",
+                        "يساعد على حماية البيانات.",
+                        ["تحويل الكود للغة الآلة وظيفة المترجم", "ترتيب المصفوفات خوارزمية فرز", "ربط قواعد البيانات مفهوم مختلف"]),
+                    Q("What does data hiding restrict?", ["Direct access to class members using access modifiers", "The use of loops inside methods", "The creation of multiple objects", "The use of inheritance"], 0,
+                        "لأن إخفاء البيانات يقيد الوصول المباشر",
+                        "باستخدام محددات الوصول مثل private.",
+                        ["الحلقات داخل الدوال لا علاقة لها", "إنشاء كائنات متعددة مسموح", "الوراثة مفهوم مستقل"]),
+                    Q("Which analogy is used to explain encapsulation?", ["A car blueprint", "A pill capsule that hides medicine inside", "A restaurant kitchen", "A library catalog"], 1,
+                        "لأن كبسولة الدواء تخفي الدواء بداخلها",
+                        "توفر طريقة آمنة ومنضبطة للتعامل.",
+                        ["مخطط السيارة تشبيه للفئة", "مطبخ المطعم تشبيه لفكرة أخرى", "فهرس المكتبة تشبيه غير مرتبط"]),
+                    Q("Why is encapsulation important for a bank account?", ["It prevents invalid states such as a negative balance", "It makes the account visible to everyone", "It allows direct modification", "It removes the need for getters"], 0,
+                        "لأن التغليف يمنع الرصيد السالب",
+                        "يحمي البيانات من التعديل غير المنضبط.",
+                        ["التغليف يخفي البيانات ولا يعرضها للجميع", "يمنع التعديل المباشر وليس يسمح به", "getters ضرورية للقراءة الآمنة"]),
+                    Q("In Java memory, what does the Stack store?", ["Objects and instance variables", "Method calls and local variables (short-lived)", "Only static variables", "Only string literals"], 1,
+                        "لأن الـ Stack يخزن استدعاءات الدوال والمتغيرات المحلية",
+                        "بيانات قصيرة العمر.",
+                        ["الكائنات تُخزن في Heap", "المتغيرات الثابتة لها مكان خاص", "النصوص الثابتة في String Pool"]),
+                    Q("In Java memory, what does the Heap store?", ["Method calls and local variables", "Objects and instance variables (long-lived)", "Only primitive local variables", "Only compiled bytecode"], 1,
+                        "لأن الـ Heap يخزن الكائنات",
+                        "بيانات طويلة العمر.",
+                        ["استدعاءات الدوال في Stack", "المتغيرات المحلية الأولية في Stack", "الكود المترجم في منطقة Method Area"]),
+                    Q("Which access modifier restricts access to the class itself only?", ["public", "protected", "private", "default"], 2,
+                        "لأن private يسمح بالوصول من الفئة فقط",
+                        "هو الأكثر تقييداً.",
+                        ["public الأقل تقييداً", "protected يسمح للحزمة والفئات الفرعية", "default يسمح للحزمة"]),
+                    Q("Which access modifier allows access from anywhere?", ["private", "default", "protected", "public"], 3,
+                        "لأن public يسمح بالوصول من أي مكان",
+                        "هو الأقل تقييداً.",
+                        ["private الأكثر تقييداً", "default للحزمة فقط", "protected للفئة والحزمة والفئات الفرعية"]),
+                    Q("Which access modifier allows class, package, subclass but NOT world?", ["private", "default", "protected", "public"], 2,
+                        "لأن protected يسمح بالفئة والحزمة والفئة الفرعية",
+                        "لكن ليس من الفئات خارج الحزمة.",
+                        ["private للفئة فقط", "default لا يسمح للفئات الفرعية خارج الحزمة", "public يسمح للعالم كله"]),
+                    Q("What is inheritance in Java?", ["One class inherits fields and methods from another using extends", "A method returns multiple values", "Two classes share the same memory", "Variables change type at runtime"], 0,
+                        "لأن الوراثة تسمح بوراثة الحقول والدوال",
+                        "باستخدام كلمة extends.",
+                        ["الدالة تُرجع قيمة واحدة", "الفئات لكل واحدة ذاكرتها", "تغيير النوع وقت التشغيل ليس وراثة"]),
+                    Q("What is polymorphism?", ["\"Many forms,\" where a superclass reference can point to a subclass object", "Hiding all methods in a class", "Converting a class into an interface", "Deleting unused objects"], 0,
+                        "لأن تعدد الأشكال يعني أشكال كثيرة",
+                        "نفس الفعل يمكن أن يتصرف بطرق مختلفة.",
+                        ["إخفاء الدوال ليس تعدد أشكال", "تحويل فئة لواجهة ليس تعريفه", "حذف الكائنات غير المستخدمة مهمة GC"]),
+                    Q("Calculator with add(int,int) and add(double,double) is an example of:", ["Method Overloading (Compile-time polymorphism)", "Method Overriding (Run-time polymorphism)", "Encapsulation", "Abstraction"], 0,
+                        "لأن نفس الاسم بمعاملات مختلفة",
+                        "يحدد المترجم أي دالة يستدعيها.",
+                        ["overriding يتطلب وراثة وإعادة تعريف", "التغليف مفهوم مختلف", "التجريد مفهوم مختلف"]),
+                    Q("Animal with sound() and Dog extends Animal with sound() is:", ["Method Overloading", "Method Overriding (Run-time polymorphism)", "Data Hiding", "Constructor Chaining"], 1,
+                        "لأن الفئة الفرعية تعيد تعريف دالة الأب",
+                        "التنفيذ يعتمد على نوع الكائن.",
+                        ["overloading نفس الاسم بمعاملات مختلفة بدون وراثة", "إخفاء البيانات مفهوم مختلف", "تسلسل المنشئات مفهوم مختلف"])
+                ]
+            },
+
+            /* ═══════ اختبار 5: التجريد Abstraction ═══════ */
+            {
+                id: 'abstraction', icon: '🎭', title: 'التجريد Abstraction', level: 'متقدم', lv: 'lv-a', ac: '#f59e0b', mins: 13, questions: [
+                    Q("What is abstraction in Java?", ["Hiding implementation details while showing only essential features", "Making all classes public", "Storing data in arrays", "Writing loops to repeat code"], 0,
+                        "لأن التجريد إخفاء تفاصيل التنفيذ",
+                        "إظهار الميزات الأساسية فقط.",
+                        ["جعل الفئات public ليس تجريداً", "تخزين البيانات في مصفوفات ليس تجريداً", "الحلقات للتكرار وليست تجريداً"]),
+                    Q("Abstraction focuses mainly on:", ["How an object stores memory", "What an object does rather than how it does it", "How to compile Java code", "How to create databases"], 1,
+                        "لأن التجريد يركز على ما يفعله الكائن",
+                        "وليس كيف يفعله.",
+                        ["تخزين الذاكرة تفصيلة تنفيذ", "ترجمة الكود عملية مستقلة", "إنشاء قواعد البيانات مجال مختلف"]),
+                    Q("In the car analogy, steering wheel and pedals represent:", ["Implementation details", "Abstract interface", "Engine combustion", "Fuel injection"], 1,
+                        "لأنها الواجهة المجردة",
+                        "ما يتعامل معه المستخدم مباشرة.",
+                        ["التفاصيل التنفيذية مخفية عن السائق", "احتراق المحرك تفصيلة داخلية", "حقن الوقود تفصيلة داخلية"]),
+                    Q("In the car analogy, engine mechanics represent:", ["Abstract interface", "Public constants", "Implementation details", "Interface constructors"], 2,
+                        "لأنها تفاصيل التنفيذ المخفية",
+                        "لا يحتاج المستخدم معرفتها.",
+                        ["الواجهة المجردة هي المقود والدواسات", "الثوابت العامة مفهوم مختلف", "منشئات الواجهة غير موجودة أصلاً"]),
+                    Q("Which two types of abstraction are mentioned?", ["Class and object abstraction", "Data abstraction and process abstraction", "Static and dynamic abstraction", "Manual and automatic abstraction"], 1,
+                        "لأن النوعين هما تجريد البيانات وتجريد العمليات",
+                        "كل منهما يخفي جانباً مختلفاً.",
+                        ["تجريد الفئة والكائن ليسا التصنيفان المذكوران", "ثابت وديناميكي ليستا التصنيفين", "يدوي وتلقائي ليستا تصنيفين صحيحين"]),
+                    Q("What does data abstraction mean?", ["Making all data public", "Hiding internal data representation and showing only necessary info", "Preventing classes from being extended", "Converting data into binary"], 1,
+                        "لأن تجريد البيانات يخفي التمثيل الداخلي",
+                        "يوفر طرقاً آمنة للتعامل مع البيانات.",
+                        ["جعل البيانات public عكس التجريد", "منع الوراثة مفهوم مختلف", "التحويل الثنائي مفهوم مختلف"]),
+                    Q("What does process abstraction mean?", ["Hiding the implementation of methods and showing only signatures", "Hiding variable names", "Making methods static", "Deleting unused objects"], 0,
+                        "لأن تجريد العمليات يخفي تنفيذ الدوال",
+                        "يظهر توقيع الدالة فقط.",
+                        ["إخفاء أسماء المتغيرات ليس تعريفه", "جعل الدوال static ليس تجريد عمليات", "حذف الكائنات مهمة GC"]),
+                    Q("What is an abstract class?", ["A class that can be instantiated normally", "A class that cannot be instantiated and may contain abstract and concrete methods", "A class with only static methods", "A variable type"], 1,
+                        "لأن الفئة المجردة لا يمكن إنشاء كائن منها",
+                        "تستخدم كفئة أساس.",
+                        ["لا يمكن إنشاء كائن منها مباشرة", "قد تحتوي دوال عادية وليس static فقط", "ليست نوع متغير"]),
+                    Q("Which keyword declares an abstract class?", ["interface", "extends", "abstract", "implements"], 2,
+                        "لأن الكلمة المفتاحية هي abstract",
+                        "تخبر البرنامج أن الفئة مجردة.",
+                        ["interface لتعريف الواجهات", "extends للوراثة", "implements لتنفيذ الواجهات"]),
+                    Q("Which statement is true about abstract classes?", ["Cannot have constructors", "Can have constructors", "Cannot have fields", "Cannot have concrete methods"], 1,
+                        "لأن الفئات المجردة يمكن أن تحتوي على constructors",
+                        "تُستخدم من قبل الفئات الفرعية.",
+                        ["يمكن أن تحتوي constructors تُستدعى من الفئات الفرعية", "يمكن أن تحتوي حقول", "يمكن أن تحتوي دوال مُنفذة concrete"]),
+                    Q("What is an abstract method?", ["A method with no name", "A method without implementation", "A method that returns void", "A constructor"], 1,
+                        "لأن الدالة المجردة بدون تنفيذ",
+                        "الفئات الفرعية تحدد التنفيذ.",
+                        ["الدالة لها اسم لكن بدون جسم", "إرجاع void ليس شرط التجريد", "المنشئ ليس دالة مجردة"]),
+                    Q("If a class extends an abstract class, what must it usually do?", ["Implement all abstract methods unless also abstract", "Delete all inherited fields", "Become an interface", "Override all constructors"], 0,
+                        "لأن الفئات الفرعية يجب أن تطبق الدوال المجردة",
+                        "إلا إذا كانت هي نفسها مجردة.",
+                        ["لا تحذف الحقول الموروثة", "لا تصبح واجهة", "المنشئات لا تُعمل لها override"]),
+                    Q("When should you prefer using an abstract class?", ["Contract between unrelated classes", "Multiple inheritance through classes", "Base class with common behavior for closely related classes", "Only constants"], 2,
+                        "لأن الفئة المجردة لفئات مرتبطة",
+                        "توفر سلوكاً مشتركاً.",
+                        ["العقد بين فئات غير مرتبطة مناسب للواجهات", "لا يوجد وراثة متعددة للفئات في Java", "الثوابت فقط مناسب للواجهات"]),
+                    Q("What is an interface?", ["A concrete class with implementation", "A pure abstraction used to define a contract", "A class that can be instantiated", "A private field container"], 1,
+                        "لأن الواجهة تجريد خالص",
+                        "تحدد ما يجب أن تفعله الفئة.",
+                        ["الفئة الملموسة تحتوي تنفيذ", "لا يمكن إنشاء كائن من الواجهة", "ليست حاوية حقول خاصة"]),
+                    Q("In interfaces, methods before Java 8 are:", ["private abstract", "protected concrete", "public abstract by default", "static final with bodies"], 2,
+                        "لأن دوال الواجهة كانت عامة ومجردة",
+                        "يجب على الفئة المنفذة تنفيذها.",
+                        ["private abstract غير مسموح في الواجهات", "protected concrete ليست افتراضية", "static final بأجسام ليست الوضع قبل Java 8"]),
+                    Q("All variables declared in an interface are implicitly:", ["private static mutable", "public static final", "protected instance", "default package-private"], 1,
+                        "لأن متغيرات الواجهة ثوابت",
+                        "عامة وثابتة ونهائية.",
+                        ["ليست private ولا قابلة للتعديل", "ليست protected ولا instance", "ليست package-private"]),
+                    Q("Can interfaces have constructors?", ["Yes, always", "Only if they have default methods", "No", "Only if implemented twice"], 2,
+                        "لأن الواجهات لا تحتوي على constructors",
+                        "ليست فئة قابلة لإنشاء كائنات.",
+                        ["ليس لها constructors أبداً", "الدوال default لا تغير ذلك", "التنفيذ المتكرر لا يغير الحقيقة"]),
+                    Q("Which statement is true about classes and interfaces?", ["A class can implement multiple interfaces", "A class can extend multiple abstract classes", "An interface can have constructors", "An interface must be instantiated"], 0,
+                        "لأن الفئة يمكنها تنفيذ أكثر من واجهة",
+                        "لكن ترث من فئة واحدة فقط.",
+                        ["لا يمكن وراثة عدة فئات مجردة", "الواجهة ليس لها constructors", "الواجهة لا تُنشأ منها كائنات"]),
+                    Q("Which Java feature allows interfaces to have default/static methods?", ["Java 8+", "Java interfaces never allow methods", "Constructors were added in Java 8", "Interfaces became instantiable in Java 8"], 0,
+                        "لأن دوال default أضيفت في Java 8",
+                        "يساعد على تطوير الواجهات.",
+                        ["الواجهات تسمح بالدوال منذ Java 8", "الـ constructors لم تُضف للواجهات أبداً", "الواجهات لم تصبح قابلة للإنشاء"]),
+                    Q("Which use case is best suited for interfaces?", ["Standardize behavior across unrelated classes and multiple inheritance", "Constructors and shared state for related classes", "Hide only internal fields", "Replace all abstract classes"], 0,
+                        "لأن الواجهات لتوحيد السلوك",
+                        "بين فئات غير مرتبطة.",
+                        ["المنشئات والحالة المشتركة للفئات المجردة", "إخفاء الحقول وظيفة التغليف", "لا تستبدل الفئات المجردة بالكامل"]),
+                    Q("Which statement about fields is correct?", ["Abstract class fields: any modifier; interface fields: public static final only", "Both allow private mutable fields", "Interfaces allow protected fields", "Abstract classes cannot have fields"], 0,
+                        "لأن حقول الفئة المجردة بأي محدد",
+                        "بينما الواجهة ثوابت فقط.",
+                        ["الواجهة لا تسمح بحقول private قابلة للتعديل", "الواجهة لا تسمح بحقول protected", "الفئة المجردة يمكن أن تحتوي حقول"]),
+                    Q("Which statement is correct about constructors?", ["Abstract: No, Interface: Yes", "Abstract: Yes, Interface: No", "Both have constructors", "Neither can define constructors"], 1,
+                        "لأن الفئة المجردة لها constructors",
+                        "بينما الواجهة لا.",
+                        ["العكس صحيح تماماً", "الواجهة ليس لها constructors", "الفئة المجردة يمكنها تعريف constructors"]),
+                    Q("Which correctly describes inheritance?", ["A class can extend multiple abstract classes", "A class can extend one abstract class and implement multiple interfaces", "An interface can extend a class", "Interfaces can create objects"], 1,
+                        "لأن الفئة ترث من واحدة وتنفذ عدة واجهات",
+                        "هذا هو التصميم الصحيح في Java.",
+                        ["لا يمكن وراثة عدة فئات مجردة", "الواجهة لا ترث فئات", "الواجهات لا تنشئ كائنات"]),
+                    Q("Which statement about method access modifiers is correct?", ["Abstract: public/protected/private; Interface: public by contract", "Interface methods can be private or protected", "Abstract methods are always public", "Interface methods are always protected"], 0,
+                        "لأن الفئة المجردة تتحكم في الرؤية",
+                        "بينما الواجهة عقد عام.",
+                        ["دوال الواجهة المجردة public بالعقد", "الدوال المجردة قد تكون protected", "دوال الواجهة ليست protected افتراضياً"]),
+                    Q("In the E-Commerce task, which demonstrates abstraction?", ["Making Product fields private", "Customer inheriting from User", "Payment interface implemented by CreditCardPayment and PayPalPayment", "Overloading placeOrder"], 2,
+                        "لأن واجهة Payment تحدد العقد",
+                        "كل فئة تنفذ العقد بطريقتها.",
+                        ["جعل الحقول private تغليف وليس تجريداً", "وراثة العميل من User وراثة وليست تجريداً", "overloading تعدد أشكال وليس تجريداً"])
+                ]
+            },
+
+            /* ═══════ اختبار 6: المتغيرات و ArrayList ═══════ */
+            {
+                id: 'variables', icon: '📝', title: 'المتغيرات و ArrayList', level: 'متوسط', lv: 'lv-m', ac: '#f43f5e', mins: 13, questions: [
+                    Q("What is a variable in Java?", ["A fixed value that can never change", "A container for storing data values", "A keyword used only for loops", "A type of compiler error"], 1,
+                        "لأن المتغير حاوية لتخزين قيم البيانات",
+                        "يمكن تغيير قيمته أثناء تشغيل البرنامج.",
+                        ["الثابت لا يتغير وليس هذا تعريف المتغير", "الكلمة المخصصة للحلقات ليست متغيراً", "خطأ المترجم مفهوم مختلف"]),
+                    Q("Which keyword is used to declare a constant in Java?", ["static", "const", "final", "immutable"], 2,
+                        "لأن الثوابت تُعلن باستخدام final",
+                        "لا يمكن تغيير قيمتها بعد تعيينها.",
+                        ["static للانتماء للفئة", "const ليست كلمة مفتاحية في Java", "immutable وصف وليست كلمة مفتاحية"]),
+                    Q("Which is a benefit of using `final` constants?", ["They make variables change faster", "They prevent accidental modification of critical values", "They allow storing multiple data types", "They remove the need for methods"], 1,
+                        "لأن final تمنع التعديل غير المقصود",
+                        "تجعل الكود أكثر أماناً ووضوحاً.",
+                        ["لا تجعل المتغيرات أسرع", "لا تسمح بتخزين أنواع متعددة", "لا تلغي الحاجة للدوال"]),
+                    Q("What is the result of mixing `int` and `long` in arithmetic?", ["int", "long", "double", "short"], 1,
+                        "لأن خلط int مع long ينتج long",
+                        "ترقية الأنواع الأصغر إلى الأكبر.",
+                        ["النتيجة تُرقّى إلى long", "double ينتج عند وجود قيم عشرية", "short أصغر ولا ينتج عن الخلط"]),
+                    Q("What is the default type of a decimal value without suffix?", ["float", "double", "long", "int"], 1,
+                        "لأن القيم العشرية تعتبر double افتراضياً",
+                        "إلا إذا وضعنا f أو F.",
+                        ["float يحتاج لاحقة f", "long للأعداد الصحيحة الكبيرة", "int للأعداد الصحيحة"]),
+                    Q("What does automatic type promotion mean?", ["Java deletes unused variables", "Java promotes smaller types to larger types during arithmetic", "Java converts all variables to String", "Java casts larger types to smaller"], 1,
+                        "لأن الترقية التلقائية تحافظ على الدقة",
+                        "لتجنب فقدان البيانات.",
+                        ["لا تحذف المتغيرات", "لا تحول الكل إلى String", "التحويل من الأكبر للأصغر يدوي وليس تلقائياً"]),
+                    Q("When must you use explicit casting?", ["Smaller to larger type", "Larger to smaller type, such as long to int", "When declaring a constant", "When using final"], 1,
+                        "لأن التحويل من الأكبر للأصغر يحتاج تحديد يدوي",
+                        "قد يفقد بيانات.",
+                        ["من الأصغر للأكبر يتم تلقائياً", "الثوابت لا تحتاج casting", "final لا علاقة لها بالتحويل"]),
+                    Q("What can happen when you perform dangerous casting?", ["The program always becomes faster", "It can lose precision or cause bugs", "It automatically creates a new variable", "It converts the value to String"], 1,
+                        "لأن الـ casting الخطير يسبب فقدان الدقة",
+                        "يجب الحذر عند التحويل.",
+                        ["لا تجعل البرنامج أسرع بالضرورة", "لا تنشئ متغيراً تلقائياً", "لا تحول القيمة إلى String"]),
+                    Q("What is an immutable object?", ["An object whose state can be changed", "An object whose state cannot be changed once created", "An object stored only in arrays", "An object that cannot have methods"], 1,
+                        "لأن الكائن غير القابل للتغيير ثابت بعد إنشائه",
+                        "مثل String و Integer.",
+                        ["العكس: حالته لا تتغير بعد الإنشاء", "لا علاقة له بالمصفوفات", "يمكن أن يكون له دوال"]),
+                    Q("Output of: String s = \"Hello\"; s.concat(\" World\"); println(s);", ["Hello World", "Hello", "World", "Compilation error"], 1,
+                        "لأن String غير قابل للتغيير",
+                        "concat لا يغير النص الأصلي.",
+                        ["concat يعيد نصاً جديداً لم يُخزن", "World ليست النتيجة", "لا يوجد خطأ ترجمة"]),
+                    Q("What is a mutable object?", ["An object that cannot be modified", "An object that can be modified after creation", "An object that stores only numbers", "An object that cannot be used in loops"], 1,
+                        "لأن الكائن القابل للتغيير يمكن تعديله",
+                        "مثل StringBuilder و ArrayList.",
+                        ["العكس: يمكن تعديله بعد الإنشاء", "يخزن أي نوع وليس أرقاماً فقط", "يمكن استخدامه في الحلقات"]),
+                    Q("Output of: StringBuilder sb = new StringBuilder(\"Hello\"); sb.append(\" World\"); println(sb);", ["Hello", "Hello World", "World", "Compilation error"], 1,
+                        "لأن StringBuilder قابل للتغيير",
+                        "append يضيف إلى نفس الكائن.",
+                        ["append عدّل نفس الكائن فأصبح Hello World", "World ليست النتيجة الكاملة", "الكود صحيح ولا يوجد خطأ"]),
+                    Q("Why is `StringBuilder` preferred over `String` in loops?", ["It creates a new object every time", "It modifies the existing object and is faster", "It is thread-safe by default", "It stores only numbers"], 1,
+                        "لأن StringBuilder يعدل الكائن نفسه",
+                        "لا ينشئ كائنات جديدة في كل دورة.",
+                        ["لا ينشئ كائناً جديداً كل مرة، هذا عيب String", "ليس thread-safe افتراضياً", "يخزن نصوصاً وليس أرقاماً"]),
+                    Q("What happens when you use `.trim()` or `.toLowerCase()` on String?", ["The original string is modified", "A new string object is created, original unchanged", "The string becomes an integer", "The string is deleted from memory"], 1,
+                        "لأن كل تعديل على String ينشئ كائناً جديداً",
+                        "النص الأصلي يبقى دون تغيير.",
+                        ["النص الأصلي لا يتغير لأنه immutable", "لا يتحول لعدد صحيح", "لا يُحذف من الذاكرة"]),
+                    Q("What does `StringBuilder` use internally?", ["A fixed-size database table", "A char[] array that auto-expands", "A linked list of strings", "A two-dimensional array"], 1,
+                        "لأنه يستخدم مصفوفة أحرف تتمدد تلقائياً",
+                        "أسرع من إنشاء كائنات جديدة.",
+                        ["لا يستخدم جدول قاعدة بيانات", "ليست قائمة strings مترابطة", "ليست مصفوفة ثنائية"]),
+                    Q("When should you use `StringBuilder`?", ["Only when content never changes", "In loops, file building, and dynamic reports", "Only for storing integers", "When every change should create a new object"], 1,
+                        "لأنه مناسب للتغيير المتكرر",
+                        "في الحلقات وبناء المحتوى.",
+                        ["عندما لا يتغير المحتوى يكفي String", "ليس لتخزين الأعداد فقط", "إنشاء كائن جديد لكل تغيير خاصية String"]),
+                    Q("What is an array in Java?", ["A resizable collection", "A fixed-size, ordered collection of elements of the same type", "A class for graphical interfaces", "A method that returns multiple values"], 1,
+                        "لأن المصفوفة ثابتة الحجم",
+                        "لا يتغير حجمها تلقائياً.",
+                        ["المصفوفة ثابتة الحجم وليست قابلة للتمدد", "ليست فئة واجهات رسومية", "الدوال تُرجع قيمة واحدة في Java"]),
+                    Q("What is an `ArrayList` in Java?", ["A fixed-size array from java.lang", "A resizable, ordered collection from java.util.ArrayList", "A type of constant", "A primitive data type"], 1,
+                        "لأن ArrayList قابلة لتغيير الحجم",
+                        "تكبر أو تصغر تلقائياً.",
+                        ["ليست ثابتة الحجم وليست من java.lang", "ليست نوع ثابت", "ليست نوعاً أولياً primitive"]),
+                    Q("What is the main difference between array and ArrayList in size?", ["Array is dynamic, ArrayList is fixed", "Array is fixed, ArrayList is dynamic", "Both are fixed", "Both are dynamic"], 1,
+                        "لأن المصفوفة ثابتة وArrayList ديناميكي",
+                        "المرونة في تغيير الحجم.",
+                        ["العكس تماماً: المصفوفة ثابتة وArrayList ديناميكي", "ليستا ثابتتين معاً", "المصفوفة ليست ديناميكية"]),
+                    Q("Which correctly describes type support?", ["Arrays store objects only, ArrayList primitives only", "Arrays store primitives and objects, ArrayList objects only", "Both store primitives directly", "ArrayList stores primitives using special syntax"], 1,
+                        "لأن المصفوفات تدعم الأنواع الأولية",
+                        "بينما ArrayList يحتاج أنواع غلافية.",
+                        ["العكس: المصفوفات تدعم primitives", "ArrayList لا يخزن primitives مباشرة", "تخزين primitives يحتاج autoboxing وليس صيغة خاصة"]),
+                    Q("Which `ArrayList` method reads a value at a specific index?", ["add(index)", "remove(index)", "get(index)", "set(index, value)"], 2,
+                        "لأن get تقرأ القيمة",
+                        "الوصول لعنصر بموقع معين.",
+                        ["add للإضافة وليس القراءة", "remove للحذف", "set للتعديل وليس القراءة"]),
+                    Q("What is the default capacity of an `ArrayList`?", ["5, doubles when full", "10, grows by 1.5x when full", "0, grows by adding one", "100, never resizes"], 1,
+                        "لأن السعة الافتراضية 10",
+                        "تزداد بنحو 1.5 مرة.",
+                        ["الافتراضية 10 وليست 5", "السعة الابتدائية 10 وليست 0", "ليست 100 وتتغير سعتها"]),
+                    Q("Which performance statement about `ArrayList` is true?", ["Adding at end is slow, access by index is slow", "Insert/remove is fast, access by index is slow", "Adding at end is fast amortized, insert/remove is O(n), access is O(1)", "All operations are always O(1)"], 2,
+                        "لأن الإضافة في النهاية سريعة والوصول سريع",
+                        "لكن الإدخال والحذف في المنتصف بطيئان.",
+                        ["الإضافة في النهاية سريعة والوصول بالفهرس سريع", "الإدخال والحذف بطيئان O(n) والوصول سريع", "ليست كل العمليات O(1)"]),
+                    Q("What happens internally when `ArrayList` needs more capacity?", ["It deletes old elements", "It copies all elements to a new larger array", "It converts into a normal array", "It stops accepting new elements"], 1,
+                        "لأنه ينسخ العناصر لمصفوفة أكبر",
+                        "عملية مكلفة من ناحية الأداء.",
+                        ["لا تحذف العناصر القديمة بل تنقلها", "لا تتحول لمصفوفة عادية", "تواصل استقبال العناصر بعد التوسعة"]),
+                    Q("In loop logic, what is a boolean flag commonly used for?", ["To store large text files", "To remember whether a condition happened during the loop", "To increase ArrayList size", "To convert primitives into objects"], 1,
+                        "لأن الأعلام المنطقية لتتبع الشروط",
+                        "مثل متغير found للبحث.",
+                        ["ليست لتخزين الملفات النصية", "لا تزيد حجم ArrayList", "التحويل primitives لكائنات هو autoboxing"])
+                ]
+            }
+        ];
+
+        /* ═══════════════════════════════════════════════════════════
+           الحالة العامة والإعدادات
+           ═══════════════════════════════════════════════════════════ */
+        const $ = s => document.querySelector(s);
+        const QTIME = 30; // ثانية لكل سؤال
+        const LS = { best: 'qz2026_best', prog: 'qz2026_prog', muted: 'qz2026_muted', hist: 'qz2026_hist' };
+        const state = { quiz: null, i: 0, score: 0, answers: [], answered: false, timer: null, left: QTIME, start: 0, muted: localStorage.getItem(LS.muted) === '1' };
+        const LETTERS = ['A', 'B', 'C', 'D'];
+
+        /* ═══════ إدارة الشاشات (SPA) ═══════ */
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            $('#screen-' + id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           التخزين المحلي: أفضل النتائج + التقدم + السجل
+           ═══════════════════════════════════════════════════════════ */
+        const getJSON = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d } catch (e) { return d } };
+        const setJSON = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+        const getBests = () => getJSON(LS.best, {});
+        const getProg = () => getJSON(LS.prog, null);
+        const getHist = () => getJSON(LS.hist, []);
+        function saveProgress() { setJSON(LS.prog, { quizId: state.quiz.id, i: state.i, score: state.score, answers: state.answers }) }
+        function clearProgress() { localStorage.removeItem(LS.prog) }
+        function saveResult(pct) {
+            const bests = getBests(), id = state.quiz.id;
+            if (!bests[id] || pct > bests[id].pct) { bests[id] = { pct, score: state.score, total: state.quiz.questions.length, date: Date.now() }; setJSON(LS.best, bests) }
+            const hist = getHist(); hist.unshift({ id, pct, date: Date.now() }); setJSON(LS.hist, hist.slice(0, 60));
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           شاشة البداية: بناء البطاقات والإحصائيات
+           ═══════════════════════════════════════════════════════════ */
+        function renderWelcome() {
+            const bests = getBests(), hist = getHist(), prog = getProg();
+            // الإحصائيات العامة
+            const totalQ = QUIZZES.reduce((a, q) => a + q.questions.length, 0);
+            $('#gStats').innerHTML = `
+    <span class="gstat">📝 <b>${totalQ}</b> سؤال</span>
+    <span class="gstat">🗂️ <b>${QUIZZES.length}</b> أقسام</span>
+    <span class="gstat">🎯 محاولاتك: <b>${hist.length}</b></span>
+    <span class="gstat">💾 محفوظ محلياً</span>`;
+            // لافتة استئناف التقدم
+            const rb = $('#resumeBanner');
+            if (prog) {
+                const qz = QUIZZES.find(q => q.id === prog.quizId);
+                if (qz) {
+                    rb.classList.remove('hidden');
+                    rb.innerHTML = `<div class="resume-info"><span style="font-size:1.8rem">${qz.icon}</span><span>لديك اختبار غير مكتمل: ${qz.title}<small>وصلت للسؤال ${prog.i + 1} من ${qz.questions.length} — نقاطك: ${prog.score}</small></span></div><button class="btn btn-cyan" id="btnResume">▶ متابعة الاختبار</button>`;
+                    $('#btnResume').onclick = () => startQuiz(qz.id, true);
+                }
+            } else rb.classList.add('hidden');
+            // بطاقات الاختبارات
+            $('#quizGrid').innerHTML = QUIZZES.map(qz => {
+                const b = bests[qz.id];
+                return `<article class="quiz-card glass" style="--ac:${qz.ac}">
+      <div class="qc-top"><span class="qc-icon">${qz.icon}</span><span class="qc-level ${qz.lv}">${qz.level}</span></div>
+      <h3 class="qc-title">${qz.title}</h3>
+      <p class="qc-meta">📝 ${qz.questions.length} سؤالاً · ⏱ ~${qz.mins} دقيقة</p>
+      <div class="qc-best ${b ? '' : 'none'}">${b ? '🏅 أفضل نتيجة: ' + b.pct + '%' : '💠 لم تخض هذا الاختبار بعد'}</div>
+      <button class="btn btn-start" data-quiz="${qz.id}">${prog && prog.quizId === qz.id ? '▶ متابعة الاختبار' : '🚀 ابدأ الاختبار'}</button>
+    </article>`;
+            }).join('');
+            document.querySelectorAll('[data-quiz]').forEach(b => b.onclick = () => startQuiz(b.dataset.quiz, false));
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           محرك الاختبار
+           ═══════════════════════════════════════════════════════════ */
+        function startQuiz(id, resume = false) {
+            state.quiz = QUIZZES.find(q => q.id === id);
+            state.answered = false; clearInterval(state.timer);
+            const prog = resume ? getProg() : null;
+            if (resume && prog && prog.quizId === id) {
+                state.i = prog.i; state.score = prog.score; state.answers = prog.answers || [];
+            } else {
+                state.i = 0; state.score = 0; state.answers = []; saveProgress();
+            }
+            state.start = Date.now();
+            showScreen('quiz');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const qz = state.quiz, q = qz.questions[state.i], total = qz.questions.length;
+            state.answered = false; clearInterval(state.timer);
+            hideFeedback();
+            // الشريط العلوي
+            $('#qtName').textContent = qz.icon + ' ' + qz.title;
+            $('#qtCounter').textContent = `السؤال ${state.i + 1} من ${total}`;
+            const pct = Math.round(state.answers.length / total * 100);
+            $('#pFill').style.width = pct + '%'; $('#pPct').textContent = pct + '%';
+            // البطاقة مع إعادة الأنيميشن
+            const card = $('#qCard'); card.classList.remove('re-anim'); void card.offsetWidth; card.classList.add('re-anim');
+            $('#qNum').textContent = String(state.i + 1).padStart(2, '0');
+            $('#qText').textContent = q.q;
+            // الخيارات
+            $('#options').classList.remove('locked');
+            $('#options').innerHTML = q.opts.map((o, idx) => `
+    <button class="option" data-i="${idx}" aria-label="الخيار ${LETTERS[idx]}">
+      <span class="letter">${LETTERS[idx]}</span><span class="otext">${o}</span><span class="mark"></span>
+    </button>`).join('');
+            document.querySelectorAll('.option').forEach(b => b.onclick = () => pick(+b.dataset.i));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            startTimer();
+        }
+
+        function pick(idx) {
+            if (state.answered) return;
+            state.answered = true;
+            clearInterval(state.timer);
+            $('#options').classList.add('locked');
+            const q = state.quiz.questions[state.i];
+            const correct = idx === q.c;
+            if (correct) state.score++;
+            state.answers.push({ p: idx, ok: correct });
+            // تلوين الخيارات
+            const opts = document.querySelectorAll('.option');
+            opts.forEach((el, i) => {
+                const mk = el.querySelector('.mark');
+                if (i === q.c) { el.classList.add('correct'); mk.textContent = '✓' }
+                else if (i === idx) { el.classList.add('wrong'); mk.textContent = '✗' }
+                else el.classList.add('dim');
+            });
+            // تأثيرات + صوت
+            if (correct) {
+                sOK();
+                const r = opts[idx].getBoundingClientRect();
+                confettiBurst(r.left + r.width / 2, r.top + r.height / 2, 50);
+            } else {
+                sERR();
+                $('#qCard').classList.add('shake');
+                setTimeout(() => $('#qCard').classList.remove('shake'), 600);
+            }
+            updateProgress();
+            saveProgress();
+            showFeedback(correct, false, idx);
+        }
+
+        function onTimeout() {
+            if (state.answered) return;
+            state.answered = true;
+            $('#options').classList.add('locked');
+            const q = state.quiz.questions[state.i];
+            state.answers.push({ p: null, ok: false, to: true });
+            document.querySelectorAll('.option').forEach((el, i) => {
+                if (i === q.c) { el.classList.add('correct'); el.querySelector('.mark').textContent = '✓' }
+                else el.classList.add('dim');
+            });
+            sERR();
+            updateProgress();
+            saveProgress();
+            showFeedback(false, true, null);
+        }
+
+        function updateProgress() {
+            const total = state.quiz.questions.length, pct = Math.round(state.answers.length / total * 100);
+            $('#pFill').style.width = pct + '%'; $('#pPct').textContent = pct + '%';
+        }
+
+        function showFeedback(correct, timedOut, picked) {
+            const q = state.quiz.questions[state.i], last = state.i === state.quiz.questions.length - 1;
+            $('#fbTimeup').classList.toggle('on', timedOut);
+            $('#fbCorrect').textContent = LETTERS[q.c] + '. ' + q.opts[q.c];
+            // تأثير الكتابة المتحركة لسبب الاختيار
+            typeText($('#fbReason'), q.reason, 10);
+            $('#fbExp').textContent = q.exp;
+            // أسباب خطأ الخيارات الأخرى
+            let wi = 0;
+            $('#fbWhys').innerHTML = q.opts.map((o, idx) => {
+                if (idx === q.c) return '';
+                const line = `<li><span class="w-letter">${LETTERS[idx]}.</span><span><span class="en">${o}</span> — ${q.why[wi]}</span></li>`;
+                wi++; return line;
+            }).join('');
+            $('#btnNext').textContent = last ? '🏆 عرض النتيجة →' : 'السؤال التالي →';
+            $('#feedback').classList.add('show');
+            setTimeout(() => { $('#feedback').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); $('#btnNext').focus({ preventScroll: true }) }, 350);
+        }
+
+        function hideFeedback() { $('#feedback').classList.remove('show'); $('#fbTimeup').classList.remove('on') }
+
+        function nextQuestion() {
+            if (!state.answered) return;
+            hideFeedback();
+            state.i++;
+            if (state.i >= state.quiz.questions.length) finishQuiz();
+            else { renderQuestion(); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           المؤقت الزمني (دائري SVG)
+           ═══════════════════════════════════════════════════════════ */
+        const CIRC = 2 * Math.PI * 20; // محيط دائرة المؤقت
+        function startTimer() {
+            state.left = QTIME;
+            const fg = $('#tFg'); fg.style.strokeDasharray = CIRC; fg.style.strokeDashoffset = 0;
+            $('#tNum').textContent = QTIME; $('#timerBox').classList.remove('danger');
+            clearInterval(state.timer);
+            state.timer = setInterval(() => {
+                state.left--;
+                $('#tNum').textContent = Math.max(state.left, 0);
+                fg.style.strokeDashoffset = CIRC * (1 - state.left / QTIME);
+                if (state.left <= 10) $('#timerBox').classList.add('danger');
+                if (state.left <= 0) { clearInterval(state.timer); onTimeout() }
+            }, 1000);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           شاشة النتائج
+           ═══════════════════════════════════════════════════════════ */
+        function finishQuiz() {
+            clearInterval(state.timer);
+            const total = state.quiz.questions.length, pct = Math.round(state.score / total * 100);
+            const elapsed = Math.round((Date.now() - state.start) / 1000);
+            saveResult(pct); clearProgress();
+            // الرسالة التقييمية
+            const msg = pct >= 90 ? '🏆 ممتاز! أنت محترف!' : pct >= 75 ? '🌟 جيد جداً! أداء رائع!' : pct >= 60 ? '👍 جيد! واصل التعلم!' : '📚 تحتاج مزيداً من المراجعة';
+            $('#resMsg').textContent = msg;
+            $('#resQuizName').textContent = `اختبار: ${state.quiz.title}`;
+            // الإحصائيات
+            const wrong = total - state.score;
+            $('#resStats').innerHTML = `
+    <div class="rstat glass"><div class="rv ok">✓ ${state.score}</div><div class="rl">إجابات صحيحة</div></div>
+    <div class="rstat glass"><div class="rv err">✗ ${wrong}</div><div class="rl">إجابات خاطئة</div></div>
+    <div class="rstat glass"><div class="rv neu">${pct}%</div><div class="rl">النسبة المئوية</div></div>
+    <div class="rstat glass"><div class="rv neu">⏱ ${fmtTime(elapsed)}</div><div class="rl">الوقت المستغرق</div></div>`;
+            // مراجعة الأخطاء
+            const wrongs = state.answers.map((a, i) => ({ a, q: state.quiz.questions[i], i })).filter(x => !x.a.ok);
+            $('#reviewList').innerHTML = wrongs.length ? wrongs.map(({ a, q, i }) => `
+    <div class="review-item">
+      <div class="q-head" style="margin-bottom:8px"><b>السؤال ${i + 1}</b></div>
+      <div class="rq en">${q.q}</div>
+      <div class="ra">
+        <span class="tag-err">✗ إجابتك: ${a.p === null ? 'لم تجب — انتهى الوقت' : LETTERS[a.p] + '. ' + q.opts[a.p]}</span>
+        <span class="tag-ok">✓ الصحيحة: ${LETTERS[q.c]}. ${q.opts[q.c]}</span>
+      </div>
+      <div class="rr">📌 ${q.reason}</div>
+    </div>`).join('')
+                : '<div class="no-errors">🎉 ممتاز! لم ترتكب أي خطأ في هذا الاختبار!</div>';
+            showScreen('results');
+            // الدائرة المتحركة + العد التصاعدي
+            const rFg = $('#rFg'); rFg.style.strokeDashoffset = 527.8;
+            setTimeout(() => { rFg.style.strokeDashoffset = 527.8 * (1 - pct / 100) }, 100);
+            countUp($('#rPct'), pct, 1600);
+            // احتفال كبير
+            setTimeout(() => { confettiRain(pct >= 60 ? 220 : 90); if (pct >= 75) setTimeout(() => confettiRain(160), 700); sWin() }, 400);
+        }
+
+        function countUp(el, target, dur) {
+            const t0 = performance.now();
+            (function step(t) {
+                const p = Math.min((t - t0) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(target * e) + '%';
+                if (p < 1) requestAnimationFrame(step);
+            })(t0);
+        }
+        const fmtTime = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+
+        /* ═══════════════════════════════════════════════════════════
+           الكونفيتي (Canvas مخصص بدون مكتبات)
+           ═══════════════════════════════════════════════════════════ */
+        const FX = { cv: $('#fxCanvas'), parts: [], raf: null };
+        FX.ctx = FX.cv.getContext('2d');
+        function fxResize() { FX.cv.width = innerWidth; FX.cv.height = innerHeight }
+        fxResize(); addEventListener('resize', fxResize);
+        const FX_COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#22d3ee', '#10b981', '#f59e0b', '#f43f5e', '#f1f5f9'];
+        function fxPush(x, y, vx, vy) { FX.parts.push({ x, y, vx, vy, rot: Math.random() * 6.3, vr: (Math.random() - .5) * .3, w: 6 + Math.random() * 7, h: 4 + Math.random() * 5, c: FX_COLORS[Math.random() * FX_COLORS.length | 0], life: 90 + Math.random() * 70, shape: Math.random() < .5 ? 0 : 1 }) }
+        function confettiBurst(x, y, n = 50) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.3, sp = 3 + Math.random() * 7; fxPush(x, y, Math.cos(a) * sp, Math.sin(a) * sp - 3) } fxLoop() }
+        function confettiRain(n = 150) { for (let i = 0; i < n; i++)fxPush(Math.random() * FX.cv.width, -20 - Math.random() * 200, (Math.random() - .5) * 2, 2 + Math.random() * 4); fxLoop() }
+        function fxLoop() {
+            if (FX.raf) return;
+            (function draw() {
+                const c = FX.ctx; c.clearRect(0, 0, FX.cv.width, FX.cv.height);
+                FX.parts = FX.parts.filter(p => p.life > 0 && p.y < FX.cv.height + 30);
+                for (const p of FX.parts) {
+                    p.x += p.vx; p.y += p.vy; p.vy += .12; p.vx *= .99; p.rot += p.vr; p.life--;
+                    c.save(); c.translate(p.x, p.y); c.rotate(p.rot); c.globalAlpha = Math.min(p.life / 40, 1); c.fillStyle = p.c;
+                    if (p.shape) c.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                    else { c.beginPath(); c.arc(0, 0, p.w / 2.4, 0, 6.3); c.fill() }
+                    c.restore();
+                }
+                if (FX.parts.length) FX.raf = requestAnimationFrame(draw);
+                else { FX.raf = null; c.clearRect(0, 0, FX.cv.width, FX.cv.height) }
+            })();
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           جسيمات الخلفية المتصلة
+           ═══════════════════════════════════════════════════════════ */
+        (function () {
+            const cv = $('#bgParticles'), ctx = cv.getContext('2d');
+            let W, H, pts = [];
+            function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; const n = Math.min(90, Math.floor(W * H / 24000)); pts = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4, r: 1 + Math.random() * 2 })) }
+            resize(); addEventListener('resize', resize);
+            (function loop() {
+                if (!document.hidden) {
+                    ctx.clearRect(0, 0, W, H);
+                    for (const p of pts) {
+                        p.x += p.vx; p.y += p.vy;
+                        if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1;
+                        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.3); ctx.fillStyle = 'rgba(139,142,246,.5)'; ctx.fill();
+                    }
+                    for (let i = 0; i < pts.length; i++)for (let j = i + 1; j < pts.length; j++) {
+                        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = dx * dx + dy * dy;
+                        if (d < 12100) { ctx.strokeStyle = `rgba(99,102,241,${.14 * (1 - d / 12100)})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke() }
+                    }
+                }
+                requestAnimationFrame(loop);
+            })();
+            // تأثير Parallax للكرات الضبابية مع حركة الماوس
+            if (matchMedia('(hover:hover)').matches) addEventListener('mousemove', e => {
+                const nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5;
+                document.querySelectorAll('.orb').forEach((o, i) => { const d = (i + 1) * 18; o.style.translate = `${nx * d}px ${ny * d}px` });
+            });
+        })();
+
+        /* ═══════════════════════════════════════════════════════════
+           الأصوات (Web Audio API — بدون ملفات خارجية)
+           ═══════════════════════════════════════════════════════════ */
+        let AC = null;
+        const ac = () => { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume(); return AC };
+        function tone(f, t0, dur, type = 'sine', vol = .14) {
+            try {
+                const a = ac(), o = a.createOscillator(), g = a.createGain();
+                o.type = type; o.frequency.value = f;
+                g.gain.setValueAtTime(vol, a.currentTime + t0);
+                g.gain.exponentialRampToValueAtTime(.001, a.currentTime + t0 + dur);
+                o.connect(g).connect(a.destination); o.start(a.currentTime + t0); o.stop(a.currentTime + t0 + dur);
+            } catch (e) { }
+        }
+        const sOK = () => { if (!state.muted) [523.25, 659.25, 783.99].forEach((f, i) => tone(f, i * .09, .2, 'sine', .13)) };
+        const sERR = () => { if (!state.muted) { tone(196, 0, .22, 'sawtooth', .07); tone(147, .13, .28, 'sawtooth', .07) } };
+        const sWin = () => { if (!state.muted) [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(f, i * .14, .3, 'triangle', .12)) };
+        function renderMute() { $('#btnMute').textContent = state.muted ? '🔇' : '🔊' }
+        $('#btnMute').onclick = () => { state.muted = !state.muted; localStorage.setItem(LS.muted, state.muted ? '1' : '0'); renderMute() };
+        renderMute();
+
+        /* ═══════════════════════════════════════════════════════════
+           تأثير الكتابة المتحركة
+           ═══════════════════════════════════════════════════════════ */
+        function typeText(el, text, speed = 10) {
+            clearInterval(el._t); el.textContent = ''; let i = 0;
+            el._t = setInterval(() => { el.textContent += text[i++]; if (i >= text.length) clearInterval(el._t) }, speed);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           التنقل والأحداث العامة + دعم لوحة المفاتيح
+           ═══════════════════════════════════════════════════════════ */
+        $('#btnNext').onclick = nextQuestion;
+        $('#btnExit').onclick = () => $('#exitModal').classList.add('open');
+        $('#mCancel').onclick = () => $('#exitModal').classList.remove('open');
+        $('#mConfirm').onclick = () => { $('#exitModal').classList.remove('open'); clearInterval(state.timer); saveProgress(); goHome() };
+        $('#btnHome').onclick = goHome;
+        $('#btnOther').onclick = goHome;
+        $('#btnRetry').onclick = () => startQuiz(state.quiz.id, false);
+        function goHome() { clearInterval(state.timer); renderWelcome(); showScreen('welcome') }
+        // إغلاق النافذة بالنقر خارجها
+        $('#exitModal').addEventListener('click', e => { if (e.target.id === 'exitModal') $('#exitModal').classList.remove('open') });
+        // لوحة المفاتيح: 1-4 / A-D للإجابة، Enter للتالي
+        document.addEventListener('keydown', e => {
+            if (!$('#screen-quiz').classList.contains('active')) return;
+            if (e.key === 'Escape') { $('#exitModal').classList.add('open'); return }
+            if (e.key === 'Enter') {
+                if (e.target.tagName === 'BUTTON') return; // ترك للأزرار الأصلية
+                if (state.answered) nextQuestion();
+                return;
+            }
+            if (state.answered) return;
+            const map = { '1': 0, '2': 1, '3': 2, '4': 3, 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+            if (e.key in map) pick(map[e.key]);
+        });
+
+        /* ═══════ الإقلاع ═══════ */
+        renderWelcome();
+    </script>
+</body>
+
+</html>
